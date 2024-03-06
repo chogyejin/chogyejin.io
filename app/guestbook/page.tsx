@@ -24,7 +24,7 @@ export default function GuestbookPage() {
 }
 
 async function GuestbookForm() {
-  let session = await auth();
+  const session = await auth();
 
   return session?.user ? (
     <>
@@ -37,7 +37,7 @@ async function GuestbookForm() {
 }
 
 async function GuestbookEntries() {
-  let entries = await getGuestbookEntries();
+  const entries = await getGuestbookEntries();
 
   if (entries.length === 0) {
     return null;

@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 export default function BlogPage() {
-  let allBlogs = getBlogPosts();
+  const allBlogs = getBlogPosts();
 
   return (
     <section>
@@ -47,7 +47,7 @@ export default function BlogPage() {
 }
 
 async function Views({ slug }: { slug: string }) {
-  let views = await getViewsCount();
+  const views = await getViewsCount();
 
   return <ViewCounter allViews={views} slug={slug} />;
 }

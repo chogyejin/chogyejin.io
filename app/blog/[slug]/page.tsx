@@ -11,18 +11,18 @@ import { unstable_noStore as noStore } from 'next/cache';
 export async function generateMetadata({
   params,
 }): Promise<Metadata | undefined> {
-  let post = getBlogPosts().find((post) => post.slug === params.slug);
+  const post = getBlogPosts().find((post) => post.slug === params.slug);
   if (!post) {
     return;
   }
 
-  let {
+  const {
     title,
     publishedAt: publishedTime,
     summary: description,
     image,
   } = post.metadata;
-  let ogImage = image
+  const ogImage = image
     ? `https://leerob.io${image}`
     : `https://leerob.io/og?title=${title}`;
 
@@ -52,15 +52,15 @@ export async function generateMetadata({
 
 function formatDate(date: string) {
   noStore();
-  let currentDate = new Date();
+  const currentDate = new Date();
   if (!date.includes('T')) {
     date = `${date}T00:00:00`;
   }
-  let targetDate = new Date(date);
+  const targetDate = new Date(date);
 
-  let yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  let monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  let daysAgo = currentDate.getDate() - targetDate.getDate();
+  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
+  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
+  const daysAgo = currentDate.getDate() - targetDate.getDate();
 
   let formattedDate = '';
 
@@ -74,7 +74,7 @@ function formatDate(date: string) {
     formattedDate = 'Today';
   }
 
-  let fullDate = targetDate.toLocaleString('en-us', {
+  const fullDate = targetDate.toLocaleString('en-us', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
@@ -84,7 +84,7 @@ function formatDate(date: string) {
 }
 
 export default function Blog({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug);
+  const post = getBlogPosts().find((post) => post.slug === params.slug);
 
   if (!post) {
     notFound();
@@ -134,10 +134,10 @@ export default function Blog({ params }) {
   );
 }
 
-let incrementViews = cache(increment);
+const incrementViews = cache(increment);
 
 async function Views({ slug }: { slug: string }) {
-  let views = await getViewsCount();
+  const views = await getViewsCount();
   incrementViews(slug);
   return <ViewCounter allViews={views} slug={slug} />;
 }
