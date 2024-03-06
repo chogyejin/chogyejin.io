@@ -9,6 +9,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   root: true,
   rules: {
+    'no-useless-escape': 'warn',
     '@typescript-eslint/no-unused-vars': 'warn',
   },
 };
