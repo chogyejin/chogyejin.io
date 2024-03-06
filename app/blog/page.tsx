@@ -14,9 +14,7 @@ export default function BlogPage() {
 
   return (
     <section>
-      <h1 className="font-medium text-2xl mb-8 tracking-tighter">
-        read my blog
-      </h1>
+      <h1 className="font-medium text-2xl mb-8 tracking-tighter">글 목록</h1>
       {allBlogs
         .sort((a, b) => {
           if (
