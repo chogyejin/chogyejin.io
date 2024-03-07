@@ -8,18 +8,18 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SandpackCSS } from './blog/[slug]/sandpack';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://leerob.io'),
+  metadataBase: new URL('https://chogyejin-io.vercel.app/'),
   title: {
-    default: 'Lee Robinson',
-    template: '%s | Lee Robinson',
+    default: 'chogyejin.io',
+    template: '%s | chogyejin.io',
   },
-  description: 'Developer, writer, and creator.',
+  description: 'Frontend Developer.',
   openGraph: {
-    title: 'Lee Robinson',
-    description: 'Developer, writer, and creator.',
-    url: 'https://leerob.io',
-    siteName: 'Lee Robinson',
-    locale: 'en_US',
+    title: 'chogyejin.io',
+    description: 'Frontend Developer.',
+    url: 'https://chogyejin-io.vercel.app/',
+    siteName: 'chogyejin.io',
+    locale: 'ko_KR',
     type: 'website',
   },
   robots: {
@@ -34,12 +34,11 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: 'Lee Robinson',
+    title: 'chogyejin.io',
     card: 'summary_large_image',
   },
   verification: {
-    google: 'eZSdmzAXlLkKhNJzfgwDqWORghxnJ8qR9_CHdAh5-xw',
-    yandex: '14d2e73487fa6c71',
+    google: 'osWsLfvL2QOsigKqh9mxLTfkls1-Wv2vNo1GD8mIAk0-xw',
   },
 };
 
