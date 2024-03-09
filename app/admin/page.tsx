@@ -1,7 +1,7 @@
-import { auth } from 'app/auth';
 import { getGuestbookEntries } from 'app/db/queries';
 import { redirect } from 'next/navigation';
 import Form from './form';
+import { auth } from '@/auth';
 
 export const metadata = {
   title: 'Admin',
