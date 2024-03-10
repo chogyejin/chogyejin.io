@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
             marginRight: 190,
             display: 'flex',
             fontSize: 130,
-            fontFamily: 'Kaisei Tokumin',
+            fontFamily: 'IBM Plex Sans KR',
             letterSpacing: '-0.05em',
             fontStyle: 'normal',
             color: 'white',
@@ -47,7 +47,7 @@ export async function GET(req: NextRequest) {
       height: 1080,
       fonts: [
         {
-          name: 'Kaisei Tokumin',
+          name: 'IBM Plex Sans KR',
           data: fontData,
           style: 'normal',
         },
