@@ -1,0 +1,275 @@
+---
+title: 'React as a UI Runtime 훑어보기'
+publishedAt: '2024-03-11'
+summary: 'Dan abramov의 "React as a UI Runtime"을 빠르게 훑어봅시다.'
+---
+
+## 들어가며
+
+> React는 Meta(구 Facebook)에서 개발된 UI를 위한 라이브러리로, [SPA](https://legacy.reactjs.org/docs/glossary.html#single-page-application) 개발에 있어 적수가 없는 대장이며 풀스택 프레임워크(Next.js, Remix, ...)들의 기반이기도 합니다. 이 글은 이러한 React의 maintainer인 Dan abramov가 2019년에 작성한 [React as a UI Runtime](https://overreacted.io/react-as-a-ui-runtime/)을 요약하고, 참고하면 좋은 내용들과 제 주관적인 해석(이탤릭체)을 부분적으로 첨부한 글입니다. 전체를 통째로 번역한 것이 아니기 때문에 완전한 이해를 위해선 원글을 직접 읽으시는 것을 추천드립니다!
+
+### 목표
+
+React programming model에 대한 이해를 높이기 위함(deep dive)
+
+## 개념 소개
+
+### Host Tree
+
+- React 프로그램은 시간이 지남에 따라 변경될 수 있는 tree(DOM tree, iOS hierarchy 등)를 출력하고, 이 tree는 React 외부 host 환경의 일부이기 때문에 host tree라고 부릅니다.
+- React는 상호 작용(클릭, 타이핑 등)이나 네트워크 응답(API) 등의 외부 이벤트에 응답하여 복잡한 host tree를 예측 가능하게 조작하는 데에 도움을 줍니다.
+- React의 두 가지 원칙
+  - Stability: host tree는 상대적으로 안정적이며, 대부분의 업데이트는 전체 구조를 근본적으로 변경하지 않습니다.
+  - Regularity: host tree는 일관성을 가진 UI(버튼, 리스트 등)로 분해될 수 있으며 [임의의 모양](https://www.youtube.com/watch?v=Uzx9ArZ7MUU) 구현에는 적합하지 않을 수 있습니다.
+
+### Host Instances
+
+- host tree는 node들로 구성되고 이 node를 host instance라 합니다. 예를 들어 DOM 환경에선 `document.createElement(tagName)`로 생성된 DOM node가 있습니다.
+- React에선 host instances의 API(DOM node의 `appendChild`, `removeChild` 등)를 직접 호출하지 않습니다.
+
+### Renderers
+
+- renderer(React DOM, React Native 등)는 React가 특정 host 환경과 소통하고 host instances를 관리하도록 지시합니다.
+- React renderer는 "mutating" mode와 "persistent" mode 두 가지로 동작할 수 있습니다.
+  - **_parent tree의 관점에서 children을 변형하는가/대체하는가의 관점으로 비교하지만, 깊게 신경 쓸 필요가 없다고 언급하며 대부분의 renderer는 mutating으로 동작한다고 이해하면 좋을 것 같습니다._**
+
+### React Elements
+
+- 사용자가 화면에서 마주하게 되는 React의 가장 작은 요소입니다.
+- 일반 JavaScript 객체이며, JSX는 이 객체의 syntax sugar입니다.
+- host instances처럼 React elements도 **_children이라는 기본 prop을 통해_** tree 형태로 구성될 수 있습니다.
+
+```jsx
+// 이런 JSX가 있다면
+// <dialog>
+//   <button className="blue" />
+//   <button className="red" />
+// </dialog>
+
+// 실제로는 이런 객체입니다
+{
+  type: 'dialog',
+  props: {
+    children: [{
+      type: 'button',
+      props: { className: 'blue' }
+    }, {
+      type: 'button',
+      props: { className: 'red' }
+    }]
+  }
+}
+```
+
+- React elements는 불변이고 지속적인 ID가 없으며 항상 다시 만들어지고 버려집니다.
+
+### Entry Point
+
+- 각 renderer는 container host instance에 특정 React element tree를 render하도록 지시하는 API가 있습니다(`ReactDOM.render(reactElement, domContainer)`).
+
+```jsx
+// document.getElementById('container') host tree를
+// 내 button element와 매치시켜줘
+ReactDOM.render(
+  // { type: 'button', props: { className: 'blue' } }
+  <button className="blue" />,
+  document.getElementById('container')
+);
+
+// 함수가 실행되면 element의 type을 보고 domNode를 만든 후에
+// domContainer에 appendChild를 시켜준다.
+```
+
+- **_React 18부터는 root를 관리하는 API가 바뀌었습니다([링크](https://react.dev/blog/2022/03/08/react-18-upgrade-guide#updates-to-client-rendering-apis))._**
+
+### Reconciliation
+
+- 새로운 React element tree 정보에 대한 응답으로 host instance tree에서 무엇을 해야 할지 파악하는 과정
+  - **_tree의 비교 알고리즘 및 가정에 대해선 [여기](https://legacy.reactjs.org/docs/reconciliation.html)에서 확인할 수 있습니다._**
+- Clear & Create와 같이 다 날리고 처음부터 다시 만드는 건 성능도 좋지 않고, 포커스와 스크롤 같은 사용자 상호작용에 대한 정보가 손실될 수 있기 때문에 기존 정보와 재사용을 기반으로 업데이트 해야 합니다.
+- tree의 동일한 위치에 있는 element type(button, div 등)이 이전 render와 다음 render에서 일치한다면 기존 host instance를 재사용합니다.
+
+### Conditions
+
+- 조건부로 element가 보여야 할 때 불필요한 host instance의 제거와 생성을 줄여 효율적으로 instance를 재사용합니다.
+
+```jsx
+// showMesasge가 true든 false든 <input />은 dialog의 두 번째 children
+// 따라서 render 간에 tree의 위치가 변경되지 않아 재사용이 가능
+function Form({ showMessage }) {
+  let message = null;
+  if (showMessage) {
+    message = <p>I was just added here!</p>;
+  }
+  return (
+    <dialog>
+      {message}
+      <input />
+    </dialog>
+  );
+  // JSX가 아닌 object notation을 이용하면?
+  // return {
+  //   type: 'dialog',
+  //   props: {
+  //     children: [
+  //       message,
+  //      { type: 'input', props: {} }
+  //     ]
+  //   }
+  // };
+}
+```
+
+### Lists
+
+- 상위 element의 내부에서 하위 element의 위치(positions)가 정적이고 재정렬되지 않는 경우엔 tree의 위치만 봐도 잘 작동하지만, 순서(order)가 바뀔 수 있다면 tree의 위치만으로 host instance의 재사용 여부를 판별하기 어렵습니다.
+- `key`는 render 사이에 element 내부 하위 element의 위치가 다르더라도 개념적으로 같다고 간주하도록 React에게 알려주는 prop입니다.
+  - **_`key`가 다르면 host intances를 아예 새롭게 만들게 되는데, 이를 통해 [state를 재설정하는 기법](https://react.dev/learn/preserving-and-resetting-state#option-2-resetting-state-with-a-key)도 있습니다._**
+
+### Components
+
+- "props"라는 argument를 이용하여 React elements를 반환하는 함수
+- **_React components(이하 컴포넌트)는 딱 하나의 element를 반환할 수도 있고, 여러 element로 구성되어 반환될 수도 있습니다._**
+
+### Purity
+
+- 컴포넌트는 props에 관련하여 순수하다고 가정합니다.
+- 일반적으로 React에서 mutation은 관용적(idiomatic)이지 않지만 컴포넌트 내부에서 render하는 동안의 local mutation은 가능합니다.
+- 컴포넌트를 여러 번 호출하는 것이 다른 컴포넌트의 render에 영향을 주지 않는다면 100% 순수한지까지는 보지 않습니다(purity보다 멱등성(idempotence)이 더 중요).
+  - **_[멱등성](https://ko.wikipedia.org/wiki/%EB%A9%B1%EB%93%B1%EB%B2%95%EC%B9%99)은 여러 번의 연산에도 결과가 달라지지 않는 성질을 말합니다._**
+  - **_React와 직접적인 관련이 있는 것은 아니지만, HTTP 메서드의 [Safe](https://developer.mozilla.org/en-US/docs/Glossary/Safe/HTTP)에 관한 내용과 멱등성을 함께 이해하는 것도 좋습니다._**
+
+### Recursion
+
+- 컴포넌트를 직접 호출하지 않고 React가 알아서 수행하도록 해야 합니다.
+
+```jsx
+// X, 컴포넌트 직접 호출
+let reactElement = Form({ showMessage: true });
+ReactDOM.render(reactElement, domContainer);
+
+// O, React elements처럼 사용
+// { type: Form, props: { showMessage: true } }
+let reactElement = <Form showMessage={true} />;
+ReactDOM.render(reactElement, domContainer);
+
+// elements는 type이 string("div", "form", ...)이고 컴포넌트는 type이 function이다.
+```
+
+- type이 function이라면 해당 컴포넌트를 호출하고 어떤 element를 render하고 싶은지 묻습니다. 이 과정이 tree에서 재귀적으로 일어나 컴포넌트가 모두 element가 되면 host tree에서 무엇이 변경되어야 하는지 React가 알게 됩니다.
+
+### Inversion of Control
+
+- React는 React element tree를 단순히 보는 것보다 컴포넌트에 대해 알고 있으면 더 일을 잘할 수 있습니다.
+- 개발자가 컴포넌트를 직접 호출하는 것이 아닌 React가 호출을 제어하도록 흐름을 넘기는 것입니다.
+- 이점
+  - 함수 그 이상의 역할을 할 수 있게 됨
+  - 컴포넌트의 type이 reconciliation에 참여
+  - reconciliation 지연 가능
+  - 디버깅 용이
+  - 지연 평가(lazy evaluation)
+
+### Lazy Evaluation
+
+- 기본적으로 A 함수 호출 안에 B 함수 호출이 인자로 넘겨진다면 B 함수는 A 함수 호출 전에 먼저 평가됩니다.
+- 화면에 컴포넌트의 결과가 보여질 필요가 없다면 **_굳이_** 컴포넌트를 호출할 필요도 없습니다.
+
+```jsx
+function Page({ user, children }) {
+  // early exit, Comments 컴포넌트 미사용
+  if (!user.isLoggedIn) {
+    return <h1>Please log in</h1>;
+  }
+  return (
+    <Layout>
+      {children} // Comments 컴포넌트 사용
+    </Layout>
+  );
+}
+
+// X
+<Page>
+  {Comments()} // Comments가 필요 없는 상황에서도 항상 호출됨
+</Page>
+
+// O
+<Page>
+  <Comments /> // lazy evaluation 가능
+</Page>
+```
+
+- 불필요한 rendering 작업을 피하고 코드가 덜 취약하게 만들어줍니다.
+
+### State
+
+- host instances는 local state(선택, 입력 등)를 가질 수 있고, UI를 render 하는 업데이트 간에 유지하고자 하며, 개념적으로 다른 것을 render 할 땐 state를 파괴합니다(**_Lists 파트에서도 언급 되었습니다_**).
+- React는 컴포넌트가 함수 그 이상의 기능을 하게 하기 위해 Hooks를 이용합니다(**_[What is a Hook?](https://legacy.reactjs.org/docs/hooks-overview.html#but-what-is-a-hook)_**).
+
+### Consistency
+
+- **_React에 의해 제공되는 객체(state, props, refs)는 내부적으로 서로 일관성이 있습니다([링크](https://github.com/facebook/react/issues/11527#issuecomment-360199710))._**
+- 실제 host tree 작업(work)을 한 번에 동기적으로 **_쭈루룩_** 실행해서 반만 업데이트 되거나 불필요한 레이아웃 및 스타일 재계산을 줄입니다.
+- React는 모든 작업을 두 단계로 나눕니다.
+  - render phase: 컴포넌트를 호출하고 reconciliation을 수행
+  - commit phase: React가 host tree와 만남
+
+### Memoization
+
+- `memo()`: tree가 너무 깊어지고 넓어지면 subtree 컴포넌트에 대해 prop을 얕은 비교하고 memoize 하여 이전 render의 결과를 재사용할 수 있습니다.
+- `useMemo()`: 컴포넌트 내부에서 사용하는 memoize hook
+
+### Raw Models
+
+- React는 변화가 있는 컴포넌트만 **_부분_** 업데이트 하는 대신, tree에 대한 reconciliation을 트리거 합니다.
+- React rendering은 O(model size)가 아닌 O(view size)입니다. **_따라서 성능은 사용하는 데이터의 구조나 양이 아닌 화면에 어떻게 그려지느냐에 영향을 받습니다._**
+- 브라우저 blocking 없이 새로운 deep tree을 rendering(**_대규모 화면 전환_**)하거나, view를 rendering 시작할 수 있기 전에 데이터를 기다려야만 하는 두 가지 문제는 Concurrent Rendering으로 해결하고자 합니다.
+  - **_[Concurrency](https://react.dev/blog/2022/03/29/react-v18#what-is-concurrent-react)는 React가 rendering을 중단 가능하게 하여 동시에 여러 버전의 UI를 준비할 수 있게 해주는 React 18의 메커니즘입니다. React working group의 [Discussions](https://github.com/reactwg/react-18/discussions/46#discussioncomment-846650)을 읽어보는 것도 좋습니다!_**
+
+### Batching
+
+- 불필요한 render를 막기 위해 `setState` 이후 즉시 re-render를 일으키지 않고 불필요한 rendering을 줄여 관련된 event handler를 한꺼번에 실행하여 함께 업데이트를 할 수 있는 것들을 모아 일괄 처리합니다.
+- **_React 18에선 promise 안, setTimeout 등 batching의 범위가 늘어난 [Automatic Batching](https://react.dev/blog/2022/03/29/react-v18#new-feature-automatic-batching)이 도입되었습니다._**
+
+### Call Tree
+
+- 프로그래밍 언어 런타임의 call stack 개념에선 함수가 호출된 후엔 stack이 비게 되지만, React는 우리가 UI tree와 상호 작용하기 위해 계속 살아있어야 합니다. DOM은 `ReactDOM.render()` 호출 이후에도 사라지지 않습니다.
+- React는 현재 rendering 중인 컴포넌트를 기억하는 자체 call stack인 call tree 구조(fibers)를 가집니다. call tree는 local state와 host instances에 대한 참조를 보관하며 reconciliation 규칙에 따라서 필요할 때만 소멸됩니다.
+  - **_call tree란 단어는 다른 문서 사용하는 것을 거의 보지 못했습니다. 단지 call stack에 빗대기 위해 사용한 것으로 보이며, fiber라는 단어에 더 집중하시면 좋을 것 같습니다._**
+- fibers는 local state가 실제 존재하는 곳으로, state가 업데이트 되면 아래 fibers를 reconciliation이 필요하다고 표기하고 그 컴포넌트들을 호출합니다.
+  - **_fibers는 React 16에 도입되어 rendering 작업을 여러 chunk로 나누어 앱의 반응성을 향상시키는 새로운 [core architecture](https://legacy.reactjs.org/blog/2017/09/26/react-v16.0.html#new-core-architecture)입니다._**
+  - **_maintainer가 직접 작성한 [이 문서](https://github.com/acdlite/react-fiber-architecture?tab=readme-ov-file#react-fiber-architecture)엔 fiber에 관한 더 구체적인 설명이 포함되어 있습니다._**
+
+### Context
+
+- 대부분의 컴포넌트에 동일한 props(테마 등)가 필요하고 모든 레벨을 통해 전달하는 게 번거로울 때 사용
+- **_Context는 Redux와 같은 라이브러리와 종종 비교되곤 하는데, 그 자체로는 상태를 관리하는 전역 상태 관리 도구가 아니며 단순히 전달만 하는 API입니다. 유용한 사례로는 의존성 주입(Dependency Injection)을 통한 테스트 단순화가 있습니다([참고 링크](https://blog.testdouble.com/posts/2021-03-19-react-context-for-dependency-injection-not-state/))._**
+
+### Effects
+
+- 컴포넌트는 rendering 중에 observable한 side effects를 가져선 안되지만 포커스 관리, 데이터 소스 구독 등 필요한 경우도 있습니다.
+- time to interactive와 time to first paint를 늘리면 안되기 때문에 effect 코드의 실행은 브라우저가 화면을 다시 paint 할 때까지 연기됩니다.
+  - **_원글에서는 [TTI](https://calibreapp.com/blog/time-to-interactive), [FMP](https://developer.chrome.com/docs/lighthouse/performance/first-meaningful-paint?hl=en)로 링크되어 있지만, 현재(2024.03) 기준 Lighthouse에서 deprecated된 지표기 때문에 LCP, TBT, INP 등의 지표를 활용하길 권한다고 합니다([링크](https://web.dev/articles/tti?hl=en))._**
+- effects는 컴포넌트가 처음 사용자에게 보였을 때와 업데이트 된 후마다 실행됩니다.
+- 구독(subscriptions)과 같은 경우에는 cleanup이 필요할 수도 있습니다. React는 effect가 return 하는 함수를 다음의 effect가 실행되기 전과 컴포넌트가 파괴될 때 실행됩니다.
+- 두 번째 인자인 deps 배열은 effect를 skip 하기 위해 있는 것이고 변경될 수 있는 모든 것을 포함해야 합니다.
+  - **_여기서 변경될 수 있는 값은 [공식 문서](https://react.dev/learn/separating-events-from-effects#reactive-values-and-reactive-logic)에서 reactive value로 소개됩니다._**
+  - **_복잡하게 생각할 필요 없이 eslint [exhaustive-deps](https://github.com/facebook/react/issues/14920) 규칙을 충실하게 따르면 됩니다!_**
+- [useEffect에 관한 deep dive](https://overreacted.io/a-complete-guide-to-useeffect/)도 따로 마련되어 있습니다.
+- **_React의 안티 패턴으로 가장 쉽게 이끄는 악명이 높은 hook이라 생각되며 바로 위의 useEffect deep dive 및 공식 문서 정독을 강력하게 추천합니다._**
+
+### Custom Hooks
+
+- 여러 컴포넌트가 재사용가능한 상태 로직을 공유할 수 있게 하는 함수지만, 상태 자체(itself)는 공유되지 않습니다.
+
+### Static Use Order
+
+- `import`가 module의 최상단에서만 사용되는 것과 유사하게, `use~` 호출은 **_컴포넌트 혹은 특정 hook 내부의_** 최상단(top level)에 위치해야 합니다(외부, 루프, 조건문 X).
+  - **_현재 canary로 개발 중인 hook인 [use](https://react.dev/reference/react/use)는 루프나 조건문에서도 사용 가능하다고 합니다!_**
+- React state는 컴포넌트와 tree 속 ID에 국한됩니다.
+- hooks는 내부적으로 linked lists로 구현 되었습니다. [이 글](https://overreacted.io/react-as-a-ui-runtime/)은 왜 hooks가 호출 순서에 의존하는지에 대한 이해를 돕습니다.
+
+## 마치며
+
+프로그래밍 모델에 대한 원론적인 내용을 소개하는 내용이기 때문에 길고 읽기 쉽지 않습니다(Dan abramov 역시 초보자를 위한 포스트는 아니라고 언급합니다!).
+
+하지만 React가 런타임에서 어떤 원칙과 개념들을 활용하는지 이해한다면 UI 구현과 관련된 문제 해결 능력 향상뿐만 아니라 React 자체의 여러 응용, 개선 및 변화에도 더 쉽게 적응하고 유연하게 대처할 수 있다고 생각합니다. 따라서 이렇게도 읽어보고 저렇게도 읽으며 천천히 씹다 보면 (언젠간) 도움이 될 거라고 정리하며 글을 마칩니다. 🙇‍♂️
