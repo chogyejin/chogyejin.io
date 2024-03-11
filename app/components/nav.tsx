@@ -4,9 +4,6 @@ const navItems = {
   '/': {
     name: '소개',
   },
-  // '/work': {
-  //   name: 'work',
-  // },
   '/blog': {
     name: '글',
   },
@@ -20,10 +17,10 @@ export function Navbar() {
     <aside className="-ml-[8px] mb-16 tracking-tight">
       <div className="lg:sticky lg:top-20">
         <nav
-          className="flex flex-row items-start relative px-0 pb-0 fade md:overflow-auto scroll-pr-6 md:relative"
+          className="flex flex-row justify-between relative px-0 pb-0 fade md:overflow-auto scroll-pr-6 md:relative"
           id="nav"
         >
-          <div className="flex flex-row space-x-0 pr-10">
+          <div className="flex">
             {Object.entries(navItems).map(([path, { name }]) => {
               return (
                 <Link
@@ -35,6 +32,18 @@ export function Navbar() {
                 </Link>
               );
             })}
+          </div>
+          <div className="flex items-center italic">
+            by
+            <a href="https://github.com/chogyejin" target="_blank">
+              <img
+                alt="chogyejin"
+                src="https://github.com/chogyejin.png"
+                width="30"
+                height="30"
+                className="mx-2 rounded-full"
+              />
+            </a>
           </div>
         </nav>
       </div>
