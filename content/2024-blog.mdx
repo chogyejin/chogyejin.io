@@ -110,11 +110,15 @@ AUTH 설정까지 마쳤다면 프로덕션용 환경 변수를 가지고 새로
 
 ### 프로젝트 커스텀
 
-세팅을 마쳤다면 이젠 진짜 내가 쓸 프로젝트로 바꿔보겠습니다.
+세팅을 마쳤다면 이젠 진짜 내가 쓸 프로젝트로 바꿔보겠습니다. 빠른 팁은 'leerob'으로 되어있는 부분을 각자 본인에 맞춰 수정하고, 사용하지 않는 코드를 제거하면 됩니다!
 
 #### 1. ESLint
 
-전반적인 코드 퀄리티 보장 및 버그 방지를 위해 typescript-eslint를 설치하려는데, 타입 안정성을 보장하며 더 간단한 `flat config format`이 새로 나왔다고 합니다. 하지만 [Next.js의 문서](https://nextjs.org/docs/app/building-your-application/configuring/eslint)에서는 아직 이전 format으로 가이드하고 있기 때문에 [Legacy ESLint Setup](https://typescript-eslint.io/getting-started/legacy-eslint-setup)을 설치했습니다.
+저는 개인적으로 ESLint를 정말 좋아합니다. 미리 경고나 에러를 띄워 전반적인 코드 퀄리티 보장 및 버그 방지를 해주고, 때로는 Format On Save를 통해 자동으로 코드를 수정해주기도 하는 친구입니다.
+
+[Next.js ESLint](https://nextjs.org/docs/app/building-your-application/configuring/eslint)와 [Legacy ESLint Setup](https://typescript-eslint.io/getting-started/legacy-eslint-setup)에 맞춰 설치했습니다.
+
+> 타입 안정성을 보장하며 더 간단한 `flat` config format이 있긴 하지만, 규칙 자체가 달라지는 것은 아니기 때문에 익숙한 legacy 포맷을 사용했고 후에 ESLint v9가 나오면 마이그레이션 해볼 예정입니다!
 
 추가적으로 [no-useless-escape](https://eslint.org/docs/latest/rules/no-useless-escape)와 [@typescript-eslint/no-unused-vars](https://typescript-eslint.io/rules/no-unused-vars/)과 관련된 동작에 이상이 없는 것을 확인한 후, `warn`으로 처리하여 당장 눈을 아프게 하는 빨간 줄들을 임시 처리 해두었습니다.
 
@@ -128,7 +132,7 @@ App Router에선 static(객체 형태) 혹은 dynamic(함수 형태) metadata를
 
 #### 3. Open Graph(W/ Route Handler, Edge Runtime)
 
-카카오톡, 디스코드 등에서 링크를 공유하면 이미지 하나와 여러 설명들이 나오는 걸 보신 적이 있으신가요? Open Graph(이하 OG)는 이와 같이 링크를 공유했을 때 시각적인 추가 정보를 제공해주는 프로토콜입니다. 아래는 leerob 블로그 글 중 하나에 대한 디스코드에서의 Open Graph(이하 OG)입니다.
+카카오톡, 디스코드 등에서 링크를 공유하면 이미지 하나와 여러 설명들이 나오는 걸 보신 적이 있으신가요? Open Graph(이하 OG)는 이와 같이 링크를 공유했을 때 시각적인 추가 정보를 제공해주는 프로토콜입니다. 아래는 leerob 블로그 글 중 하나에 대한 디스코드에서의 OG입니다.
 
 <Image
   alt={`오픈 그래프 이미지 예시`}
@@ -181,10 +185,14 @@ Edge Runtime은 작고 간단한 함수를 통해 짧은 지연 시간으로 정
 
 > Edge Runtime과 함께 언급되는 Nodejs Runtime은 사용해보지 않았습니다. 이유는 opengraph-image 공식 문서에서 Route segment 옵션으로 `'edge'`를 사용하기도 했고, Hobby 플랜을 알차게 사용해보고 싶었기 때문입니다. Nodejs Runtime이 궁금하신 분들은 [비교글](https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes)을 읽은 후 직접 적용해보고 가능하다면 속도 차이가 얼마나 나는지도 체크해보시면 좋을 것 같습니다!
 
-이렇게 만든 OG가 잘 적용되었는지 확인하려면 직접 링크를 여러 군데에 뿌려봐도 되고, Vercel Deployments 탭 혹은 [툴](https://www.opengraph.xyz/)을 활용하면 됩니다!
+아래는 만든 OG가 잘 적용되었는지 확인하는 방법입니다(때에 따라서는 카카오톡과 같이 직접 OG의 캐시를 초기화해야하는 경우도 있었습니다).
+
+- 직접 링크 공유하기
+- Vercel Deployments 탭 > Current 배포 > Open Grpah 탭
+- Checker 이용하기([opengraph.xyz](https://www.opengraph.xyz/), [opengraph.dev](https://opengraph.dev/) 등)
 
 ## 마치며
 
-이렇게 Next.js App Router를 기반으로 블로그를 만들어봤습니다. 블로그들을 둘러보다 보면 Next.js가 아닌 [Gatsby](https://www.gatsbyjs.com/)를 이용하신 분도 많이 보이는데, Gatsby만의 설정이나 플러그인을 맛보는 것보단 실무에 가깝고 많이 쓰이는 Next.js를 건드려보는 게 의미있다고 생각했습니다. 또한 추가적으로 댓글 기능, 테마 변경, 게시글 레이아웃 변경 등 개선 사항도 많기 때문에 계속해서 점진적으로 개선해나갈 예정입니다.
+이렇게 Next.js App Router를 기반으로 블로그를 만들어봤습니다. 블로그들을 둘러보다 보면 Next.js가 아닌 [Gatsby](https://www.gatsbyjs.com/)를 이용하신 분도 많이 보이는데, 똑같이 새로운 기술을 다루는 것이라면 Gatsby만의 설정이나 플러그인을 맛보는 것보단 비교적 실무에 가깝고 많이 쓰이는 Next.js를 사용해보는 게 의미도 있고 재밌었습니다. 또한 추가적으로 댓글 기능, 테마 변경, 게시글 레이아웃 변경 등 개선 사항도 많기 때문에 계속해서 점진적으로 수정해나갈 예정입니다.
 
-이 글에서 직접적으로 언급하지 못한 검색 수집 및 색인 관련 내용(Google Search Console, Naver Search Advisor)과 TypeScript 개선 적용 등은 다른 포스팅으로 다뤄보도록 하겠습니다. 긴 글 읽어주셔서 감사합니다! 😎
+이 글에서 직접적으로 언급하지 못한 검색 수집 및 색인 관련 내용(Google Search Console, Naver Search Advisor)과 타이트한 TypeScript 적용 등은 다른 포스팅으로 다뤄보도록 하겠습니다. 긴 글 읽어주셔서 감사합니다! 😎
