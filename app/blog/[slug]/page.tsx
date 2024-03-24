@@ -109,7 +109,7 @@ export default function Blog({ params }) {
             url: `https://chogyejin-io.vercel.app/blog/${post.slug}`,
             author: {
               '@type': 'Person',
-              name: 'Lee Robinson',
+              name: 'chogyejin',
             },
           }),
         }}
