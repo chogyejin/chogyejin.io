@@ -89,7 +89,7 @@ AUTH_GITHUB_SECRET=
 - POSTGRES 관련 변수는 [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres/quickstart) 문서를 참고했습니다.
 
   - 게시물 조회수, 방명록을 이용하기 위해 데이터베이스가 필요합니다. 대시보드에 미리 만들어둔 프로젝트에 들어가 데이터베이스까지 만들어주면, 프로덕션용 환경 변수를 알아서 세팅해주고, 로컬에는 Vercel CLI를 이용하여 간편하게 가져올 수 있습니다.
-  - 처음 고른 region을 바꿀 수 없습니다.
+  - 처음 고른 region은 바꿀 수 없습니다. Vercel Postgres는 [Neon](https://neon.tech/)과의 합작품인데, 아쉽게도 region으로 [한국이 아직 없습니다](https://vercel.com/docs/storage/vercel-postgres/limits#vercel-postgres-region-list). 문서에도 적혀있듯이 데이터베이스와 [Function Region](https://vercel.com/docs/functions/configuring-functions/region#setting-your-default-region)만 일치시켜줍니다(저는 워싱턴(`iad1`)을 이용했습니다).
   - 테이블은 미리 제공된 [쿼리](https://github.com/leerob/leerob.io/blob/main/README.md#database-schema)를 통해 프로젝트 Storage 탭 > Data > Query에서 생성했습니다.
 
 - AUTH 관련 변수는 [Auth.js](https://authjs.dev/) 문서를 참고했습니다.
