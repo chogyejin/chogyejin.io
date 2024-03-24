@@ -5,7 +5,13 @@ import { type Session } from 'next-auth';
 import { sql } from './postgres';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 export async function increment(slug: string) {
+  if (isDevelopment) {
+    return;
+  }
+
   noStore();
   await sql`
     INSERT INTO views (slug, count)
