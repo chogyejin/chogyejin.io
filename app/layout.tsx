@@ -8,7 +8,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SandpackCSS } from './blog/[slug]/sandpack';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chogyejin-io.vercel.app/'),
+  metadataBase: new URL('https://chogyejin-io.vercel.app'),
   title: {
     default: 'chogyejin.io',
     template: '%s | chogyejin.io',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'chogyejin.io',
     description: 'Frontend Developer.',
-    url: 'https://chogyejin-io.vercel.app/',
+    url: 'https://chogyejin-io.vercel.app',
     siteName: 'chogyejin.io',
     locale: 'ko_KR',
     type: 'website',
@@ -51,7 +51,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang="ko"
       className={cx(
         'text-black bg-white dark:text-white dark:bg-[#111010]',
         GeistSans.variable,
