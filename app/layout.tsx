@@ -13,12 +13,12 @@ export const metadata: Metadata = {
     default: 'chogyejin.io',
     template: '%s | chogyejin.io',
   },
-  description: 'Frontend Developer.',
+  description: '프론트엔드 개발자 조계진입니다.',
   openGraph: {
-    title: 'chogyejin.io',
-    description: 'Frontend Developer.',
+    title: '조계진 블로그',
+    description: '프론트엔드 개발자 조계진입니다.',
     url: 'https://chogyejin-io.vercel.app',
-    siteName: 'chogyejin.io',
+    siteName: '조계진 블로그',
     locale: 'ko_KR',
     type: 'website',
   },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: 'chogyejin.io',
+    title: '조계진 블로그',
     card: 'summary_large_image',
   },
   verification: {
