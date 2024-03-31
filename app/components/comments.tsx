@@ -2,10 +2,12 @@
 
 import { useEffect } from 'react';
 
+const COMMENT_ID = 'comments';
+
 const Comments = () => {
   useEffect(() => {
     const script = document.createElement('script');
-    const commentsDiv = document.getElementById('comments');
+    const commentsDiv = document.getElementById(COMMENT_ID);
 
     if (!commentsDiv) {
       return;
@@ -26,14 +28,11 @@ const Comments = () => {
     script.setAttribute('data-lang', 'ko');
     script.setAttribute('data-loading', 'lazy');
     script.setAttribute('crossorigin', 'anonymous');
-    try {
-      commentsDiv.appendChild(script);
-    } catch (error) {
-      console.error('Error while rendering giscus widget.', error);
-    }
+
+    commentsDiv.appendChild(script);
   }, []);
 
-  return <div id="comments" />;
+  return <div id={COMMENT_ID} />;
 };
 
 export default Comments;
