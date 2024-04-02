@@ -91,28 +91,30 @@ export default function Blog({ params }) {
     notFound();
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.metadata.title,
+    datePublished: post.metadata.publishedAt,
+    dateModified: post.metadata.publishedAt,
+    description: post.metadata.summary,
+    image: post.metadata.image
+      ? `https://chogyejin-io.vercel.app${post.metadata.image}`
+      : `https://chogyejin-io.vercel.app/og?title=${post.metadata.title}`,
+    url: `https://chogyejin-io.vercel.app/blog/${post.slug}`,
+    author: {
+      '@type': 'Person',
+      name: '조계진',
+    },
+  };
+
   return (
     <section>
       <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BlogPosting',
-            headline: post.metadata.title,
-            datePublished: post.metadata.publishedAt,
-            dateModified: post.metadata.publishedAt,
-            description: post.metadata.summary,
-            image: post.metadata.image
-              ? `https://chogyejin-io.vercel.app${post.metadata.image}`
-              : `https://chogyejin-io.vercel.app/og?title=${post.metadata.title}`,
-            url: `https://chogyejin-io.vercel.app/blog/${post.slug}`,
-            author: {
-              '@type': 'Person',
-              name: 'chogyejin',
-            },
-          }),
+          __html: JSON.stringify(jsonLd),
         }}
       />
       <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
