@@ -15,10 +15,10 @@ export const metadata: Metadata = {
   },
   description: '프론트엔드 개발자 조계진입니다.',
   openGraph: {
-    title: '조계진 블로그',
+    title: 'chogyejin.io',
     description: '프론트엔드 개발자 조계진입니다.',
     url: 'https://chogyejin-io.vercel.app',
-    siteName: '조계진 블로그',
+    siteName: 'chogyejin.io',
     locale: 'ko_KR',
     type: 'website',
   },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     },
   },
   twitter: {
-    title: '조계진 블로그',
+    title: 'chogyejin.io',
     card: 'summary_large_image',
   },
   verification: {
