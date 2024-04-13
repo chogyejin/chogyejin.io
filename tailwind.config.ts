@@ -18,6 +18,9 @@ export default {
         },
       },
     },
+    listStyleType: {
+      dash: '"- "',
+    },
   },
   future: {
     hoverOnlyWhenSupported: true,
