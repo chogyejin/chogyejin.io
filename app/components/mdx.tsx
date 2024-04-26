@@ -1,12 +1,19 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import Image, { ImageProps } from 'next/image';
+import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc';
 import { TweetComponent } from './tweet';
 import { highlight } from 'sugar-high';
 import React from 'react';
 import { LiveCode } from './sandpack';
 
-function Table({ data }) {
+function Table({
+  data,
+}: {
+  data: {
+    headers: string[];
+    rows: string[][];
+  };
+}) {
   const headers = data.headers.map((header, index) => (
     <th key={index}>{header}</th>
   ));
@@ -28,38 +35,38 @@ function Table({ data }) {
   );
 }
 
-function CustomLink(props) {
+function CustomLink(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const href = props.href;
 
-  if (href.startsWith('/')) {
+  if (typeof href === 'string' && href.startsWith('/')) {
     return (
-      <Link href={href} {...props}>
+      <Link {...props} href={href}>
         {props.children}
       </Link>
     );
   }
 
-  if (href.startsWith('#')) {
+  if (typeof href === 'string' && href.startsWith('#')) {
     return <a {...props} />;
   }
 
   return <a target="_blank" rel="noopener noreferrer" {...props} />;
 }
 
-function RoundedImage(props) {
-  return <Image alt={props.alt} className="rounded-lg" {...props} />;
+function RoundedImage(props: ImageProps) {
+  return <Image className="rounded-lg" {...props} alt={props.alt} />;
 }
 
-function CaptionImage({ caption, ...props }) {
+function CaptionImage({ caption, ...props }: ImageProps & { caption: string }) {
   return (
     <div className="flex flex-col items-center">
-      <Image src={props.src} alt={props.alt} {...props} />
+      <Image {...props} src={props.src} alt={props.alt} />
       <span className="italic">{caption}</span>
     </div>
   );
 }
 
-function Callout(props) {
+function Callout(props: { emoji: string; children: React.ReactNode }) {
   return (
     <div className="px-4 py-3 border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 rounded p-1 text-sm flex items-center text-neutral-900 dark:text-neutral-100 mb-8">
       <div className="flex items-center w-4 mr-4">{props.emoji}</div>
@@ -68,7 +75,7 @@ function Callout(props) {
   );
 }
 
-function ProsCard({ title, pros }) {
+function ProsCard({ title, pros }: { title: string; pros: string[] }) {
   return (
     <div className="border border-emerald-200 dark:border-emerald-900 bg-neutral-50 dark:bg-neutral-900 rounded-xl p-6 my-4 w-full">
       <span>{`You might use ${title} if...`}</span>
@@ -97,7 +104,7 @@ function ProsCard({ title, pros }) {
   );
 }
 
-function ConsCard({ title, cons }) {
+function ConsCard({ title, cons }: { title: string; cons: string[] }) {
   return (
     <div className="border border-red-200 dark:border-red-900 bg-neutral-50 dark:bg-neutral-900 rounded-xl p-6 my-6 w-full">
       <span>{`You might not use ${title} if...`}</span>
@@ -122,24 +129,34 @@ function ConsCard({ title, cons }) {
   );
 }
 
-function Code({ children, ...props }) {
+function Code({ children, ...props }: React.HTMLAttributes<HTMLElement>) {
+  if (typeof children !== 'string') {
+    return null;
+  }
+
   const codeHTML = highlight(children);
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
 }
 
-function slugify(str) {
+function slugify(str: string) {
   return str
     .toString()
     .toLowerCase()
     .trim() // Remove whitespace from both ends of a string
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/&/g, '-and-') // Replace & with 'and'
-    .replace(/[^\w\-]+/g, '') // Remove all non-word characters except for -
-    .replace(/\-\-+/g, '-'); // Replace multiple - with single -
+    .replace(/[^A-Za-z0-9가-힣-]+/g, '') // Remove all non-word characters except for -
+    .replace(/-+/g, '-'); // Replace multiple - with single -
 }
 
-function createHeading(level) {
-  return function withLink({ children }) {
+function createHeading(level: number) {
+  return function withLink({
+    children,
+  }: React.HTMLAttributes<HTMLHeadingElement>) {
+    if (typeof children !== 'string') {
+      return null;
+    }
+
     const slug = slugify(children);
     return React.createElement(
       `h${level}`,
@@ -175,7 +192,7 @@ const components = {
   CaptionImage,
 };
 
-export function CustomMDX(props) {
+export function CustomMDX(props: MDXRemoteProps) {
   return (
     <MDXRemote
       {...props}
