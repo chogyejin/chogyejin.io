@@ -26,21 +26,26 @@ function parseFrontmatter(fileContent: string) {
   return { metadata: metadata as Metadata, content };
 }
 
-function getMDXFiles(dir) {
+function getMDXFiles(dir: string) {
   return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx');
 }
 
-function readMDXFile(filePath) {
+function readMDXFile(filePath: string) {
   const rawContent = fs.readFileSync(filePath, 'utf-8');
   return parseFrontmatter(rawContent);
 }
 
-function extractTweetIds(content) {
+function extractTweetIds(content: string) {
   const tweetMatches = content.match(/<StaticTweet\sid="[0-9]+"\s\/>/g);
-  return tweetMatches?.map((tweet) => tweet.match(/[0-9]+/g)[0]) || [];
+  if (!tweetMatches) {
+    return [];
+  }
+
+  // tweetMatches has at least one element including id
+  return tweetMatches.map((tweet) => tweet.match(/[0-9]+/g)![0]);
 }
 
-function getMDXData(dir) {
+function getMDXData(dir: string) {
   const mdxFiles = getMDXFiles(dir);
   return mdxFiles.map((file) => {
     const { metadata, content } = readMDXFile(path.join(dir, file));
