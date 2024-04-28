@@ -3,15 +3,16 @@
 import { useFormStatus } from 'react-dom';
 import { useState, useEffect } from 'react';
 import { deleteGuestbookEntries } from 'app/db/actions';
+import { Entry } from 'app/db/queries';
 
-export default function Form({ entries }) {
-  const [selectedInputs, setSelectedInputs] = useState<string[]>([]);
+export default function Form({ entries }: { entries: Entry[] }) {
+  const [selectedInputs, setSelectedInputs] = useState<number[]>([]);
   const [startShiftClickIndex, setStartShiftClickIndex] = useState<number>(0);
   const [isShiftKeyPressed, setIsShiftKeyPressed] = useState(false);
   const [isCommandKeyPressed, setIsCommandKeyPressed] = useState(false);
 
   useEffect(() => {
-    const keyDownHandler = ({ key }) => {
+    const keyDownHandler = ({ key }: KeyboardEvent) => {
       if (key === 'Shift') {
         setIsShiftKeyPressed(true);
       }
@@ -19,7 +20,7 @@ export default function Form({ entries }) {
         setIsCommandKeyPressed(true);
       }
     };
-    const keyUpHandler = ({ key }) => {
+    const keyUpHandler = ({ key }: KeyboardEvent) => {
       if (key === 'Shift') {
         setIsShiftKeyPressed(false);
       }
@@ -37,7 +38,7 @@ export default function Form({ entries }) {
     };
   }, []);
 
-  const handleNormalClick = (checked: boolean, id: string, index: number) => {
+  const handleNormalClick = (checked: boolean, id: number, index: number) => {
     setSelectedInputs((prevInputs) =>
       checked
         ? [...prevInputs, id]
@@ -46,7 +47,7 @@ export default function Form({ entries }) {
     setStartShiftClickIndex(index);
   };
 
-  const handleCommandClick = (id: string) => {
+  const handleCommandClick = (id: number) => {
     setSelectedInputs((prevInputs) =>
       prevInputs.includes(id)
         ? prevInputs.filter((inputId) => inputId !== id)
@@ -74,7 +75,7 @@ export default function Form({ entries }) {
     });
   };
 
-  const handleCheck = (checked: boolean, id: string, index: number) => {
+  const handleCheck = (checked: boolean, id: number, index: number) => {
     if (isCommandKeyPressed) {
       handleCommandClick(id);
     } else if (isShiftKeyPressed && startShiftClickIndex !== null) {
@@ -86,7 +87,7 @@ export default function Form({ entries }) {
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>,
-    id: string,
+    id: number,
     index: number
   ) => {
     if (event.key === 'Enter') {
@@ -109,7 +110,7 @@ export default function Form({ entries }) {
       {entries.map((entry, index) => (
         <GuestbookEntry key={entry.id} entry={entry}>
           <input
-            name={entry.id}
+            name={entry.id.toString()}
             type="checkbox"
             className="mr-2 w-4 h-4"
             onChange={(e) => handleCheck(e.target.checked, entry.id, index)}
@@ -122,7 +123,13 @@ export default function Form({ entries }) {
   );
 }
 
-function GuestbookEntry({ entry, children }) {
+function GuestbookEntry({
+  entry,
+  children,
+}: {
+  entry: Entry;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col space-y-1 mb-4">
       <div className="w-full text-sm break-words items-center flex">
@@ -136,9 +143,9 @@ function GuestbookEntry({ entry, children }) {
   );
 }
 
-const cx = (...classes) => classes.filter(Boolean).join(' ');
+const cx = (...classes: unknown[]) => classes.filter(Boolean).join(' ');
 
-function DeleteButton({ isActive }) {
+function DeleteButton({ isActive }: { isActive: boolean }) {
   const { pending } = useFormStatus();
 
   return (

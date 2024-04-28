@@ -35,7 +35,14 @@ export async function getViewsCount(): Promise<
   `;
 }
 
-export async function getGuestbookEntries() {
+export type Entry = {
+  id: number;
+  body: string;
+  created_by: string;
+  updated_at: string | null;
+};
+
+export async function getGuestbookEntries(): Promise<Entry[]> {
   if (!process.env.POSTGRES_URL) {
     return [];
   }

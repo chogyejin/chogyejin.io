@@ -67,9 +67,9 @@ export async function saveGuestbookEntry(formData: FormData) {
   // console.log('Email sent', response);
 }
 
-export async function deleteGuestbookEntries(selectedEntries: string[]) {
+export async function deleteGuestbookEntries(selectedEntries: number[]) {
   const session = await getSession();
-  const email = session.user?.email as string;
+  const email = session.user?.email;
 
   if (email !== 'whrpwls96@naver.com') {
     throw new Error('Unauthorized');
