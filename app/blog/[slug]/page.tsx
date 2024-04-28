@@ -9,9 +9,13 @@ import { increment } from 'app/db/actions';
 import { unstable_noStore as noStore } from 'next/cache';
 import Comments from 'app/components/comments';
 
+type Props = {
+  params: { slug: string };
+};
+
 export async function generateMetadata({
   params,
-}): Promise<Metadata | undefined> {
+}: Props): Promise<Metadata | undefined> {
   const post = getBlogPosts().find((post) => post.slug === params.slug);
   if (!post) {
     return;
@@ -66,25 +70,26 @@ function formatDate(date: string) {
   let formattedDate = '';
 
   if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}y ago`;
+    formattedDate = `${yearsAgo}년 전`;
   } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}mo ago`;
+    formattedDate = `${monthsAgo}달 전`;
   } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}d ago`;
+    formattedDate = `${daysAgo}일 전`;
   } else {
-    formattedDate = 'Today';
+    formattedDate = '오늘';
   }
 
-  const fullDate = targetDate.toLocaleString('en-us', {
+  const fullDate = targetDate.toLocaleString('ko-KR', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'Asia/Seoul',
   });
 
   return `${fullDate} (${formattedDate})`;
 }
 
-export default function Blog({ params }) {
+export default function Blog({ params }: Props) {
   const post = getBlogPosts().find((post) => post.slug === params.slug);
 
   if (!post) {
