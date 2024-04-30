@@ -31,6 +31,7 @@ function getMDXFiles(dir: string) {
 }
 
 function readMDXFile(filePath: string) {
+  // TODO: Fix [fs.readFileSync(???*0*, "utf-8") is very dynamic]
   const rawContent = fs.readFileSync(filePath, 'utf-8');
   return parseFrontmatter(rawContent);
 }
