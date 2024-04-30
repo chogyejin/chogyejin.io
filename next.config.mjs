@@ -5,9 +5,7 @@ export const sql = postgres(process.env.POSTGRES_URL, {
 });
 
 const nextConfig = {
-  experimental: {
-    useLightningcss: true,
-  },
+  experimental: {},
   async redirects() {
     if (!process.env.POSTGRES_URL) {
       return [];
@@ -32,6 +30,7 @@ const nextConfig = {
       },
     ];
   },
+  transpilePackages: ['next-mdx-remote'],
 };
 
 const ContentSecurityPolicy = `
