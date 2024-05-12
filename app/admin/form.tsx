@@ -4,6 +4,7 @@ import { useFormStatus } from 'react-dom';
 import { useState, useEffect } from 'react';
 import { deleteGuestbookEntries } from 'app/db/actions';
 import { Entry } from 'app/db/queries';
+import { cx } from 'app/utils/cx';
 
 export default function Form({ entries }: { entries: Entry[] }) {
   const [selectedInputs, setSelectedInputs] = useState<number[]>([]);
@@ -142,8 +143,6 @@ function GuestbookEntry({
     </div>
   );
 }
-
-const cx = (...classes: unknown[]) => classes.filter(Boolean).join(' ');
 
 function DeleteButton({ isActive }: { isActive: boolean }) {
   const { pending } = useFormStatus();

@@ -6,6 +6,7 @@ import { Navbar } from './components/nav';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SandpackCSS } from './blog/[slug]/sandpack';
+import { cx } from 'app/utils/cx';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chogyejin-io.vercel.app'),
@@ -44,8 +45,6 @@ export const metadata: Metadata = {
     },
   },
 };
-
-const cx = (...classes: unknown[]) => classes.filter(Boolean).join(' ');
 
 export default function RootLayout({
   children,
