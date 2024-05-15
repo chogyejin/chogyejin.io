@@ -40,7 +40,7 @@ function useTocHighlight() {
         return;
       }
 
-      // Find index where "top" is greater than offset.
+      // Find the first index where anchor's "top" value is smaller than offset.
       let index = -1;
       while (index < headersAnchors.length - 1) {
         const headerAnchor = headersAnchors[index + 1];
