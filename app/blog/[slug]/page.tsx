@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { Suspense, cache } from 'react';
 import { notFound } from 'next/navigation';
-import { CustomMDX } from 'app/components/mdx';
+import { CustomMDX, slugify } from 'app/components/mdx';
 import { getViewsCount } from 'app/db/queries';
 import { getBlogPosts } from 'app/db/blog';
 import ViewCounter from '../view-counter';
 import { increment } from 'app/db/actions';
 import { unstable_noStore as noStore } from 'next/cache';
 import Comments from 'app/components/comments';
+import Toc, { TocItem } from 'app/blog/[slug]/toc';
 
 type Props = {
   params: { slug: string };
@@ -89,12 +90,39 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
+function extractHeadings(content: string) {
+  const lines = content.split('\n');
+  const headings: TocItem[] = [];
+
+  lines.forEach((line) => {
+    if (line.startsWith('## ')) {
+      const text = line.replace(/##\s/g, '');
+      headings.push({
+        level: 2,
+        text,
+        id: slugify(text),
+      });
+    } else if (line.startsWith('### ')) {
+      const text = line.replace(/###\s/g, '');
+      headings.push({
+        level: 3,
+        text,
+        id: slugify(text),
+      });
+    }
+  });
+
+  return headings;
+}
+
 export default function Blog({ params }: Props) {
   const post = getBlogPosts().find((post) => post.slug === params.slug);
 
   if (!post) {
     notFound();
   }
+
+  const headings = extractHeadings(post.content);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -138,6 +166,7 @@ export default function Blog({ params }: Props) {
       <article className="prose prose-quoteless prose-neutral dark:prose-invert">
         <CustomMDX source={post.content} />
       </article>
+      <Toc headings={headings} />
       <Comments />
     </section>
   );
