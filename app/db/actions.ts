@@ -4,8 +4,7 @@ import { auth } from '@/auth';
 import { type Session } from 'next-auth';
 import { sql } from './postgres';
 import { revalidatePath, unstable_noStore as noStore } from 'next/cache';
-
-const isDevelopment = process.env.NODE_ENV === 'development';
+import { isDevelopment } from 'app/constants/env';
 
 export async function increment(slug: string) {
   if (isDevelopment) {
