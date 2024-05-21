@@ -9,6 +9,7 @@ import { increment } from 'app/db/actions';
 import { unstable_noStore as noStore } from 'next/cache';
 import Comments from 'app/components/comments';
 import Toc, { TocItem } from 'app/blog/[slug]/toc';
+import { isDevelopment } from 'app/constants/env';
 
 type Props = {
   params: { slug: string };
@@ -90,6 +91,19 @@ function formatDate(date: string) {
   return `${fullDate} (${formattedDate})`;
 }
 
+function hasDuplicates(strArray: string[]) {
+  const seen = new Set();
+
+  for (const str of strArray) {
+    if (seen.has(str)) {
+      return true;
+    }
+    seen.add(str);
+  }
+
+  return false;
+}
+
 function extractHeadings(content: string) {
   const lines = content.split('\n');
   const headings: TocItem[] = [];
@@ -111,6 +125,11 @@ function extractHeadings(content: string) {
       });
     }
   });
+
+  const textOnlyHeadings = headings.map((ele) => ele.text);
+  if (isDevelopment && hasDuplicates(textOnlyHeadings)) {
+    console.warn('There are duplicated heading tag texts.');
+  }
 
   return headings;
 }
