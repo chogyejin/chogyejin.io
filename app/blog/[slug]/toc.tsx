@@ -89,7 +89,7 @@ function Toc({ headings }: Props) {
   return (
     <nav
       className={cx(
-        'hidden xl:block transition-all text-sm overflow-scroll fixed right-10 w-60 h-full max-h-[calc(100vh-8rem)] break-word',
+        'hidden xl:block transition-all text-sm overflow-auto fixed right-10 w-60 h-full max-h-[calc(100vh-8rem)] break-word',
         currentIndex >= 0 ? 'top-10' : 'top-60'
       )}
     >
