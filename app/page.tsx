@@ -19,6 +19,10 @@ const OPEN_SOURCES = [
     name: 'MDN Web Docs',
     link: 'https://github.com/mdn/content/pulls?q=involves%3Achogyejin',
   },
+  {
+    name: 'Stackflow',
+    link: 'https://github.com/daangn/stackflow/pulls?q=involves%3Achogyejin',
+  },
 ] as const;
 
 export default function Page() {
