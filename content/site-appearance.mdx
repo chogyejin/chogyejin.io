@@ -2,6 +2,7 @@
 title: '내 사이트 URL 등록하기(w/ Next.js App Router)'
 publishedAt: '2024-05-01'
 summary: '구글과 네이버 검색 결과에 내 사이트를 노출시켜 봅시다.'
+tags: ['Next.js', '구글', '네이버', 'Structured data']
 ---
 
 열심히 사이트를 만들어 배포까지 했지만, 포털에 검색을 이리저리 해봐도 내 사이트가 나오지 않을 수 있습니다. 예를 들어 구글은 **Google Search**라는 [검색 엔진](https://developer.mozilla.org/en-US/docs/Glossary/Search_engine)이 Crawling(정보 수집) -> Indexing(자체 DB 저장) -> Serving(제공)의 [과정](https://developers.google.com/search/docs/fundamentals/how-search-works?hl=en#introducing-the-three-stages-of-google-search)을 거쳐 [검색 결과](https://developers.google.com/search/docs/appearance/visual-elements-gallery?hl=en#text-result)를 표출합니다. 여기서 Crawling이 제대로 이뤄지지 않고 있는 것이기 때문에, 내가 사이트의 주인(소유권)임을 확인시킨 후 색인 생성 요청을 통해 사이트 정보를 주게 되면 빠르게 검색 결과에 포함될 수 있습니다.
