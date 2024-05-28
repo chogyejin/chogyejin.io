@@ -1,12 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 
-type Metadata = {
+type TextMetadata = {
   title: string;
   publishedAt: string;
   summary: string;
   image?: string;
 };
+
+type ArrayMetadata = {
+  tags?: string[];
+};
+
+type Metadata = TextMetadata & ArrayMetadata;
 
 function parseFrontmatter(fileContent: string) {
   const frontmatterRegex = /---\s*([\s\S]*?)\s*---/;
@@ -16,11 +22,35 @@ function parseFrontmatter(fileContent: string) {
   const frontMatterLines = frontMatterBlock.trim().split('\n');
   const metadata: Partial<Metadata> = {};
 
+  let linkedString = '';
   frontMatterLines.forEach((line) => {
-    const [key, ...valueArr] = line.split(': ');
+    let [key, ...valueArr] = line.split(': ');
+
+    // Multi-line array value
+    // TODO: Front matter divided into two lines
+    if (valueArr.length === 0) {
+      linkedString += key.trim();
+      if (linkedString.includes(']')) {
+        [key, ...valueArr] = linkedString.split(':');
+        const parsedValue = JSON.parse(
+          valueArr.join('').replace(/'/g, '"').replace(/,\]/, ']') // Remove trailing commas
+        );
+        metadata[key.trim() as keyof ArrayMetadata] = parsedValue;
+        linkedString = '';
+      }
+      return;
+    }
+
     let value = valueArr.join(': ').trim();
+
+    if (value.startsWith('[') && value.endsWith(']')) {
+      const parsedValue: string[] = JSON.parse(value.replace(/'/g, '"')); // Only double quotes are valid in JSON
+      metadata[key.trim() as keyof ArrayMetadata] = parsedValue;
+      return;
+    }
+
     value = value.replace(/^['"](.*)['"]$/, '$1'); // Remove quotes
-    metadata[key.trim() as keyof Metadata] = value;
+    metadata[key.trim() as keyof TextMetadata] = value;
   });
 
   return { metadata: metadata as Metadata, content };

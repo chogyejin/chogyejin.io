@@ -31,9 +31,10 @@ export default function BlogPage() {
             href={`/blog/${post.slug}`}
           >
             <div className="w-full flex flex-col">
-              <p className="text-neutral-900 dark:text-neutral-100 tracking-tight">
+              <p className="text-neutral-900 dark:text-neutral-100 tracking-tight mr-3">
                 {post.metadata.title}
               </p>
+              <Tags tags={post.metadata.tags ?? []} />
               <Suspense fallback={<p className="h-6" />}>
                 <Views slug={post.slug} />
               </Suspense>
@@ -41,6 +42,25 @@ export default function BlogPage() {
           </Link>
         ))}
     </section>
+  );
+}
+
+function Tags({ tags }: { tags: string[] }) {
+  if (tags.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2 my-1">
+      {tags.map((tag, index) => (
+        <div
+          key={index}
+          className="text-white bg-gray-400 dark:bg-gray-600 rounded-lg px-2 truncate"
+        >
+          {tag}
+        </div>
+      ))}
+    </div>
   );
 }
 
