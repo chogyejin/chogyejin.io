@@ -28,12 +28,13 @@ bun dev
 - Comments system([giscus](https://giscus.app/))
 - Table of contents
 - MDX components(`CaptionImage`)
+- Front matter(tags for slug)
 
 ## To Be Added..
 
 - Theme switch
 - Scroll indicator
-- Front matter(Categorized tags, updatedAt, ...)
+- Front matter(updatedAt, series, ...)
 - Korean spell check in PR using [GitHub Actions](https://github.com/features/actions)
 - [Feature-Sliced Design](https://feature-sliced.design/) structure
 - Structured data
