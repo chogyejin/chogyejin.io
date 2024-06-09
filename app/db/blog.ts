@@ -26,8 +26,8 @@ function parseFrontmatter(fileContent: string) {
   frontMatterLines.forEach((line) => {
     let [key, ...valueArr] = line.split(': ');
 
-    // Multi-line array value
-    // TODO: Front matter divided into two lines
+    // Composed of multiple lines with front matter
+    // If the front matter is more than two lines, the entire content is included in the 'key'
     if (valueArr.length === 0) {
       linkedString += key.trim();
       if (linkedString.includes(']')) {
@@ -43,12 +43,14 @@ function parseFrontmatter(fileContent: string) {
 
     let value = valueArr.join(': ').trim();
 
+    // Composed in one line with front matter
     if (value.startsWith('[') && value.endsWith(']')) {
       const parsedValue: string[] = JSON.parse(value.replace(/'/g, '"')); // Only double quotes are valid in JSON
       metadata[key.trim() as keyof ArrayMetadata] = parsedValue;
       return;
     }
 
+    // Composed only of strings
     value = value.replace(/^['"](.*)['"]$/, '$1'); // Remove quotes
     metadata[key.trim() as keyof TextMetadata] = value;
   });
