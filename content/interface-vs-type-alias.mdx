@@ -1,0 +1,245 @@
+---
+title: 'Interface vs Type Alias'
+publishedAt: '2024-06-24'
+summary: 'TypeScript에서 Interface와 Type Aliase에 대해 비교해봅시다.'
+tags: ['TypeScript', 'Interface', 'Type Alias']
+---
+
+현대 웹 개발을 하다 보면 [TypeScript](https://www.typescriptlang.org/)로 작성된 코드를 많이 접하게 되는데, TypeScript는 컴파일 타임에 정적 타입 체크를 해주는 JavaScript의 상위 집합(superset) 언어입니다.
+
+<CaptionImage
+  alt={`타입스크립트와 자바스크립트 포함관계`}
+  src={`/images/interface-vs-type-alias/ts-js.png`}
+  width={820 / 3}
+  height={860 / 3}
+  caption={'두 언어의 포함관계'}
+/>
+
+JavaScript에서 변수를 만들어 사용하듯, TypeScript에서도 내가 사용할 타입을 만들 수 있고 이 타입을 준수하도록 명시하여 에러를 조기에 발견하거나 자동완성을 더 잘 활용할 수 있습니다. 타입을 만드는 방식에는 `interface` 키워드를 이용한 **interface**와 `type` 키워드를 이용한 **type alias**가 있습니다. 이번 글에서는 각 키워드의 문법과 객체 타입에 한하여 프로퍼티 추가 방법에 대해 알아보겠습니다.
+
+## 기본 문법
+
+### Interface
+
+interface는 객체 타입(object type)에 대한 선언으로 크게 변수, 클래스, 함수의 타입 선언에 이용될 수 있지만 이 글에선 변수의 타입을 체크하는 것을 중점적으로 알아보겠습니다. 예시는 string 타입의 name 프로퍼티와 number 타입의 age 프로퍼티를 가진 객체의 국룰 집합 `Person`입니다.
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+// 선언된 변수의 타입 체크
+const me: Person = { name: 'chogyejin', age: 20 }; // ✅
+const me2: Person = { name: 'chogyejin' }; // ❌, 'age' 프로퍼티가 없음
+
+// 함수 매개변수의 타입 체크
+function printName(student: Person) {
+  console.log(student.name);
+}
+printName(me); // ✅
+printName({ name: 'chogyejin', age: 20 }); // ✅
+printName({ name: 'chogyejin' }); // ❌, 'age' 프로퍼티가 없음
+```
+
+> 한때 interface로 선언된 타입임을 명시적으로 표현하기 위해 `I`로 시작하는 네이밍인 [헝가리안 표기법](https://en.wikipedia.org/wiki/Hungarian_notation)을 사용하기도 했었습니다(`IProps`, `IPerson` 등). 하지만 최근엔 IDE의 발전 및 가독성 저하를 이유로 지양하는 추세이며, TypeScript는 아니지만 Microsoft의 [.NET 네이밍 컨벤션 문서](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/general-naming-conventions#word-choice)에서도 사용하지 말도록 규정하고 있습니다.
+
+> [Prettify](https://www.totaltypescript.com/concepts/the-prettify-helper)라는 유틸리티 타입을 활용해 커서를 올렸을 때 새로운 타입의 프로퍼티들을 더 쉽게 확인할 수도 있습니다!
+
+### Type Alias
+
+type alias는 특정 타입에 대한 별칭을 지어주는 방식입니다. 객체 형태의 타입 선언에만 사용 가능한 interface와 달리, 어떠한 타입이든 들어올 수 있습니다. 또한 '별칭'이기 때문에 VSCode 기준 커서를 올렸을 때 interface보다 구체적으로 내부를 표기해주기도 합니다.
+
+```ts
+// 이런 식으로 기본 타입을 다시 명명할 수도 있습니다.
+type Name = string;
+type Age = number;
+
+type Person = {
+  name: Name;
+  age: Age;
+};
+
+// 변수로 선언된 변수에 대해 체크
+const me: Person = { name: 'chogyejin', age: 20 }; // ✅
+const me2: Person = { age: 20 }; // ❌, 'name' 프로퍼티가 없음
+
+// 함수의 매개변수에 대해 체크
+function printName(student: Person) {
+  console.log(student.name);
+}
+printName(me); // ✅
+printName({ name: 'chogyejin', age: 20 }); // ✅
+printName({ age: 20 }); // ❌, 'name' 프로퍼티가 없음
+```
+
+## 새로운 프로퍼티 추가하기
+
+객체를 사용하는 대부분의 상황에선 위와 같이 `interface`와 `type`가 서로 대체 가능하지만, 새로운 프로퍼티 추가할 땐 미묘한 차이가 발생합니다. `Person`에서 string 타입의 school 프로퍼티가 추가된 `Student`를 만들어보겠습니다.
+
+### Interface: extends
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+interface Student extends Person {
+  school: string;
+}
+```
+
+`extends`는 type alias로 만들어진 타입을 포함하여 2개 이상의 타입을 확장시킬 수도 있습니다. 주의할 점은 `extends` 뒤에 오는 타입들에 동일한 프로퍼티가 있을 때 타입이 일치하지 않는다면 에러가 발생합니다.
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+type StringAgePerson = {
+  name: string;
+  age: string;
+};
+
+// ❌, 'Person'과 'StringAgePerson'의 'age' 프로퍼티가 동일하지 않음(not identical)
+interface Student extends Person, StringAgePerson {
+  school: string;
+}
+```
+
+### Interface: 선언 병합
+
+```ts
+interface Student {
+  name: string;
+  age: number;
+}
+
+interface Student {
+  school: string;
+}
+```
+
+[선언 병합(Declaration Merging)](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)은 동일한 이름의 2개 이상의 `interface` 선언(declaration)을 합쳐 하나의 정의로 병합(merging)시킵니다. 주의할 점은 `extends`와 유사하게 각 interface 선언에 있는 프로퍼티도 중복이 가능하지만, 앞서 선언된 프로퍼티의 타입과 일치해야 합니다.
+
+```ts
+interface Student {
+  name: string;
+  age: number;
+}
+
+interface Student {
+  school: string;
+}
+
+// ✅, 동일한 타입의 school 중복 선언 가능
+interface Student {
+  school: string;
+}
+
+interface Student {
+  school: 'string literal'; // ❌, 'school' 프로퍼티는 string 타입이어야 함
+}
+```
+
+> 선언 병합은 전역 객체(`Window`)나 third-party 패키지의 타입에 대해 프로퍼티를 추가할 때 주로 사용됩니다. 서버 상태 관리 라이브러리의 대장인 Tanstack Query에서도 이를 [활용](https://tanstack.com/query/latest/docs/framework/react/typescript#registering-a-global-error)하고 있습니다!
+
+### Type Alias: 교집합
+
+type alias에선 `&`를 이용하여 타입을 교차(intersection)시켜 확장된 새로운 프로퍼티를 추가합니다. 개인적으로 처음 intersection을 접할 땐 앞서 소개된 방식들보다 직관적이지 않다고 느꼈었는데, 이유는 TypeScript가 **집합**을 기반으로 동작하는 언어임을 받아들이지 못했었기 때문입니다.
+
+다시 `Person`을 가져와 `Student`를 만들어보겠습니다.
+
+```ts
+type Person = {
+  name: string;
+  age: number;
+};
+
+type Student = Person & { school: string };
+```
+
+<CaptionImage
+  alt={`Person 타입과 Student 타입의 관계`}
+  src={`/images/interface-vs-type-alias/student.png`}
+  width={607}
+  height={493}
+  caption={'Student는 Person의 부분집합이기도 하다'}
+/>
+
+`Person`은 name과 age를 갖는 객체 하나가 아닌 **name과 age를 갖는 객체들의 집합**으로 이해해야 하며, string 타입의 school 프로퍼티를 가진 객체들의 집합의 교집합이 `Student`가 됩니다.
+
+여기서 좀 더 나아가 `Person`과 이름이 있는 컴퓨터 객체 집합을 교차시켜 인조인간 객체 타입 `Android`을 만들어보겠습니다.
+
+```ts
+type Person = {
+  name: string;
+  age: number;
+};
+
+type Computer = {
+  name: string;
+  cpu: string;
+  ram: string;
+};
+
+type Android = Person & Computer;
+```
+
+이전의 예시와 다른 점은 name이라는 중복된 프로퍼티가 있습니다. `interface`와 마찬가지로 각 프로퍼티가 같은 타입일 땐 문제가 되지 않지만 만약 컴퓨터의 name이 string이 아니라면 어떻게 될까요?
+
+```ts
+type Person = {
+  name: string;
+  age: number;
+};
+
+type Computer = {
+  name: number; // 컴퓨터 이름이 숫자
+  cpu: string;
+  ram: string;
+};
+
+type Android = Person & Computer;
+// {
+//   name: ???;
+//   age: number;
+//   cpu: string;
+//   ram: string;
+// }
+```
+
+<CaptionImage
+  alt={`Person 타입과 Computer 타입의 교집합`}
+  src={`/images/interface-vs-type-alias/android.png`}
+  width={640}
+  height={528}
+  caption={'이름을 알 수 없는 Android'}
+/>
+
+위처럼 동일한 이름을 가진 프로퍼티에 대해 다시 `&` 연산을 거치게 되는데,
+
+- string 타입은 **모든 문자열의 집합**
+- number 타입은 **모든 숫자의 집합**
+
+으로 파생된 두 집합의 교집합은 원소가 없는 [공집합](https://ko.wikipedia.org/wiki/%EA%B3%B5%EC%A7%91%ED%95%A9)이기 때문에 name은 never 타입이 되어 어떠한 값도 할당할 수 없게 됩니다. 따라서 intersection은 단순히 프로퍼티를 추가한다가 아닌 교집합을 생성한다는 것을 기억해야 합니다.
+
+## 마치며
+
+지금까지 타입을 만드는 방법으로의 interface와 type alias, 프로퍼티의 추가의 측면으로 키워드를 알아봤습니다.
+과거 사내 컨벤션을 정립하고 개인적으로 작업할 땐 interface를 선호했는데 이유는 아래와 같습니다.
+
+- 일단 `interface`를 쓰다가 `type`이 필요할 때 쓰라고 되어 있음([공식 문서](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#differences-between-type-aliases-and-interfaces))
+- [TypeScript GitHub Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#preferring-interfaces-over-intersections)에 따르면 성능적인 측면에서 interface를 추천
+- React에서 객체를 주로 다룸(Props)
+
+최근엔 아래와 같은 이유로 interface를 잘 사용하지 않게 되었습니다.
+
+- `type`이 더 짧음
+- 재사용되지 않는 타입은 주로 인라인으로 만들고 `&`와 `|`([union](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types))를 바로 사용
+- 전부 type alias로 사용하여 통일성 유지
+  - [우아한형제들 기술블로그](https://techblog.woowahan.com/9804/#toc-5) 결론 참고
+
+interface와 type alias를 모두 써보면서 느낀 점은 개인 및 팀의 컨벤션에 따라 정하기 나름이고, 각 키워드가 필요한 경우가 생기기 때문에 상황에 맞춰 사용하면 된다는 것입니다. 그리고 이번 글에서 소개되진 않았지만 TypeScript의 [Structural Type System](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html#structural-type-system) 및 [Freshness](https://radlohead.gitbook.io/typescript-deep-dive/type-system/freshness)도 함께 알아보시길 추천드리며 글을 마칩니다. 🙆‍♂️
