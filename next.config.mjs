@@ -31,6 +31,16 @@ const nextConfig = {
     ];
   },
   transpilePackages: ['next-mdx-remote'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 const ContentSecurityPolicy = `

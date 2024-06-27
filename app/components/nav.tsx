@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 const navItems = {
@@ -36,12 +37,12 @@ export function Navbar() {
           <div className="flex items-center italic">
             by
             <a href="https://github.com/chogyejin" target="_blank">
-              <img
-                alt="chogyejin"
+              <Image
+                alt="chogyejin github avatar"
                 src="https://github.com/chogyejin.png"
-                width="30"
-                height="30"
-                className="mx-2 rounded-full"
+                width="40"
+                height="40"
+                className="mx-2 rounded-full border"
               />
             </a>
           </div>
