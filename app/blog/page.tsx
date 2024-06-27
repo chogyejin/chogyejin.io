@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
-import ViewCounter from './view-counter';
-import { getViewsCount } from 'app/db/queries';
 import { getBlogPosts } from 'app/db/blog';
 import { Tags } from 'app/components/tags';
+import { getFormattedDate } from 'app/utils/date';
 
 export const metadata = {
   title: 'Blog',
@@ -37,17 +36,13 @@ export default function BlogPage() {
               </p>
               <Tags tags={post.metadata.tags ?? []} />
               <Suspense fallback={<p className="h-6" />}>
-                <Views slug={post.slug} />
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                  {getFormattedDate(post.metadata.publishedAt)}
+                </p>
               </Suspense>
             </div>
           </Link>
         ))}
     </section>
   );
-}
-
-async function Views({ slug }: { slug: string }) {
-  const views = await getViewsCount();
-
-  return <ViewCounter allViews={views} slug={slug} />;
 }

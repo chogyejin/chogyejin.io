@@ -6,11 +6,11 @@ import { getViewsCount } from 'app/db/queries';
 import { getBlogPosts } from 'app/db/blog';
 import ViewCounter from '../view-counter';
 import { increment } from 'app/db/actions';
-import { unstable_noStore as noStore } from 'next/cache';
 import Comments from 'app/components/comments';
 import Toc, { TocItem } from 'app/blog/[slug]/toc';
 import { isDevelopment } from 'app/constants/env';
 import { Tags } from 'app/components/tags';
+import { getFormattedDateWithAgo } from 'app/utils/date';
 
 type Props = {
   params: { slug: string };
@@ -56,40 +56,6 @@ export async function generateMetadata({
       images: [ogImage],
     },
   };
-}
-
-function formatDate(date: string) {
-  noStore();
-  const currentDate = new Date();
-  if (!date.includes('T')) {
-    date = `${date}T00:00:00`;
-  }
-  const targetDate = new Date(date);
-
-  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  const daysAgo = currentDate.getDate() - targetDate.getDate();
-
-  let formattedDate = '';
-
-  if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}년 전`;
-  } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}달 전`;
-  } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}일 전`;
-  } else {
-    formattedDate = '오늘';
-  }
-
-  const fullDate = targetDate.toLocaleString('ko-KR', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    timeZone: 'Asia/Seoul',
-  });
-
-  return `${fullDate} (${formattedDate})`;
 }
 
 function hasDuplicates(strArray: string[]) {
@@ -177,7 +143,7 @@ export default function Blog({ params }: Props) {
       <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {formatDate(post.metadata.publishedAt)}
+            {getFormattedDateWithAgo(post.metadata.publishedAt)}
           </p>
         </Suspense>
         <Suspense fallback={<p className="h-5" />}>
