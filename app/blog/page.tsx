@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import ViewCounter from './view-counter';
 import { getViewsCount } from 'app/db/queries';
 import { getBlogPosts } from 'app/db/blog';
+import { Tags } from 'app/components/tags';
 
 export const metadata = {
   title: 'Blog',
@@ -42,25 +43,6 @@ export default function BlogPage() {
           </Link>
         ))}
     </section>
-  );
-}
-
-function Tags({ tags }: { tags: string[] }) {
-  if (tags.length === 0) {
-    return null;
-  }
-
-  return (
-    <div className="flex flex-wrap gap-2 my-1">
-      {tags.map((tag, index) => (
-        <div
-          key={index}
-          className="text-white bg-gray-400 dark:bg-gray-600 rounded-lg px-2 truncate"
-        >
-          {tag}
-        </div>
-      ))}
-    </div>
   );
 }
 

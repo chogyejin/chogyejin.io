@@ -10,6 +10,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 import Comments from 'app/components/comments';
 import Toc, { TocItem } from 'app/blog/[slug]/toc';
 import { isDevelopment } from 'app/constants/env';
+import { Tags } from 'app/components/tags';
 
 type Props = {
   params: { slug: string };
@@ -172,6 +173,7 @@ export default function Blog({ params }: Props) {
       <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
         {post.metadata.title}
       </h1>
+      <Tags tags={post.metadata.tags ?? []} />
       <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
