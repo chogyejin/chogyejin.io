@@ -40,8 +40,8 @@ export function Navbar() {
               <Image
                 alt="chogyejin github avatar"
                 src="https://github.com/chogyejin.png"
-                width="40"
-                height="40"
+                width="30"
+                height="30"
                 className="mx-2 rounded-full border"
               />
             </a>
