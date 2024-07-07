@@ -239,7 +239,8 @@ type Android = Person & Computer;
 
 - `type`의 짧은 타이핑
 - 재사용되지 않는 타입은 주로 인라인으로 만들고 `&`와 `|`([union](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types))를 바로 사용
-- 전부 type alias로 사용하여 통일성 유지
-  - [우아한형제들 기술블로그](https://techblog.woowahan.com/9804/#toc-5) 결론 참고
+- 기본적으로 type alias로 사용하여 통일성을 유지하고 필요한 경우에만 interface 사용
+  - [우아한형제들 기술블로그](https://techblog.woowahan.com/9804/#toc-5)
+  - [Type vs Interface: Which Should You Use?](https://www.totaltypescript.com/type-vs-interface-which-should-you-use)
 
 interface와 type alias를 모두 써보면서 느낀 점은 개인 및 팀의 컨벤션에 따라 정하기 나름이고, 각 키워드가 필요한 경우가 생기기 때문에 상황에 맞춰 사용하면 된다는 것입니다. 그리고 이번 글에서 직접적으로 언급하진 않았지만 TypeScript의 [Structural Type System](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html#structural-type-system) 및 [Freshness](https://radlohead.gitbook.io/typescript-deep-dive/type-system/freshness)도 중요한 개념이기에 함께 알아보시길 추천드리며 글을 마칩니다. 🙆‍♂️
