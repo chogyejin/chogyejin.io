@@ -170,11 +170,11 @@ jobs:
         run: node update
 ```
 
-3. staged된 파일이 있어 diff가 true가 아닌 값으로 종료되면,()
+3. 변동 사항이 있을 때, PR에 commit 추가
 
    1. user를 github bot으로 세팅(`git config`) ([참고](https://github.com/actions/checkout/discussions/479#discussioncomment-625461))
    2. 변동 사항이 있는 파일을 staging area로 이동(`git add .`)
-   3. staged된 파일이 있어 diff가 0이 아닌 상태로 종료되면 commit & push, 그게 아니고 staged된 파일이 없으면 workflow 콘솔에 로그(`echo`)만 남김 ([참고](https://stackoverflow.com/a/28772375/17685810))
+   3. staged된 파일이 있어 `git diff --staged --quiet`가 0이 아닌 상태로 종료되면 commit & push ([참고](https://stackoverflow.com/a/28772375/17685810)), 그게 아니고 staged된 파일이 없으면 workflow 콘솔에 로그(`echo`)만 남김
 
 ```yaml
 # steps 하위 들여쓰기로 작성
