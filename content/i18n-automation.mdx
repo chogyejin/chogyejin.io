@@ -1,0 +1,212 @@
+---
+title: 'React 다국어 처리 자동화하기(/w GitHub Actions)'
+publishedAt: '2024-07-10'
+summary: 'GitHub Actions를 통해 다국어 처리 작업을 자동화 시켜봅시다.'
+tags: ['React', 'React i18next', 'GitHub Actions']
+---
+
+웹사이트의 목적에 따라 애플리케이션 자체적으로 여러 언어를 지원해야 할 수도 있습니다. 저희 사내의 모든 프로젝트에선 한국어와 영어를 포함하여 최소 2가지 언어를 지원해야 하며, 국제화(internationalization) 라이브러리 중 가장 많이 사용되는 [i18next](https://www.i18next.com/)와 [react-i18next](https://react.i18next.com/)를 사용 중입니다.
+
+이번 글에선 다국어 처리 과정에서 어떤 문제가 있었고, 어떤 방법을 통해 해결했는지 알아보겠습니다.
+
+> 사전 지식이 없이도 이해하기 쉽도록 작성했습니다. 저도 물론 사전 지식이 없었습니다!
+
+## react-18next 사용법
+
+먼저 i18next와 react-i18next를 어떻게 사용하고 있는지 간단히 살펴볼까요? [Quick start](https://react.i18next.com/guides/quick-start#configure-i18next) 문서대로 i18n 인스턴스를 관리하는 config 파일을 만들고 [useTranslation](https://react.i18next.com/latest/usetranslation-hook)에서 반환해주는 함수 `t`에 key만 넘겨주면 그에 해당하는 value를 보여줍니다.
+
+실제 사용 예시로는 한글 관련 ko.json과 영어 관련 en.json을 각각 만들어 i18n 인스턴스에 넘겨주고, useTranslation을 한 번 래핑하여 아래와 같이 사용하고 있습니다.
+
+```json
+// ko.json
+{
+  "Menu": {
+    "Add": "추가",
+    "Delete": "제거",
+  },
+  ...
+}
+```
+
+```json
+// en.json
+{
+  "Menu": {
+    "Add": "Add",
+    "Delete": "Delete",
+  },
+  ...
+}
+```
+
+```ts
+// App.tsx
+import useTranslation from '@util'; // 래핑한 hook
+
+const App = () => {
+  const t = useTranslation('Menu'); // 언어별 JSON 첫 번째 depth의 "Menu"에서 가져옴
+
+  return (
+    <div>
+      // 언어가 한국어일 땐 "추가", 영어일 땐 "Add"
+      <div>{t('Add')}</div>
+    </div>
+  );
+};
+```
+
+영어는 기본적으로 key-value가 동일한데, 그럼에도 따로 영어 JSON을 관리하는 이유는 한글 JSON과 관리 규격을 일치시키고, [Trans](https://react.i18next.com/latest/trans-component) 컴포넌트를 통해 문장에 변수가 포함되거나, 특정 컴포넌트를 추가적으로 문장에 적용할 때 이용되기 때문입니다.
+
+### 기존 방식의 문제점
+
+보통 한글 JSON을 먼저 만든 후 라인별로 key-value를 복붙하여 영어 JSON을 만드는데, 방법 자체는 간단해보이지만 JSON을 수기로 작성하다보면 다음과 같은 실수가 나올 수 있습니다.
+
+```json
+// en.json
+{
+  "Menu": {
+    "Add": "Addd", // key나 value의 오타
+    "Delete": "삭제", // 영어팩에 한글이 들어감
+  },
+  ...
+}
+```
+
+실수가 나올 수 있는 경우를 제외하더라도, 여러 파일을 왔다갔다하며 코드를 긁어서 넣는 작업은 상당히 번거롭습니다. 따라서 사람이 하는 작업을 컴퓨터에게 맡길 방법을 찾게 되었습니다.
+
+## 다국어 처리 자동화하기
+
+### 자동화 개요
+
+자동화 방식은 다음과 같습니다.
+
+1. 한글 JSON을 작성
+2. 특정 상황에 한글 JSON을 기반으로 영어 JSON 생성
+
+그리고 위와 같은 상황에 딱 어울리는 도구가 있는데, GitHub에서 사용할 수 있는 [GitHub Actions](https://github.com/features/actions)입니다. GitHub Actions는 테스트, 배포 등의 CI/CD를 자동화하는 도구로 특정 workflow를 내가 원하는 시점에 수행할 수 있습니다.
+
+지금같은 상황에선 코드 변경을 간소화하는 작업이기 때문에 분류하자면 CI(Continuous Integration)에 해당한다고 할 수 있습니다.
+
+> `React 다국어 자동화`를 검색하게 되면 Google Sheets를 이용한 방법이 많이 나오는데, Google Sheets API를 연동해야 하며(google-spreadsheet 라이브러리 필요) 엑셀 함수를 다룰 수도 있어 후보에서 제외했습니다.
+
+### JSON 생성 스크립트 작성
+
+GitHub Actions 사용에 앞서, 한글 JSON을 기반으로 영어 JSON을 만들기 위해선 서버 환경에서 이를 수행해줄 스크립트가 필요합니다. input 형태와 원하는 output 형태가 확실하니 ChatGPT를 활용해도 좋을 것 같습니다.
+
+1. fs 모듈의 `readFile` 시작
+2. `JSON.parse()`를 통해 input JSON 생성
+3. 첫 번째 depth를 순회하며 key-value 쌍 만들기(이 과정은 JSON 구조에 따라 구현이 다를 수 있어요)
+
+   ```js
+   for (const key in inputJson) {
+     const obj = inputJson[key];
+
+     for (const prop in obj) {
+       obj[prop] = prop;
+     }
+   }
+   ```
+
+4. `JSON.stringify()`를 통해 input JSON을 stringify하여 output string 생성
+5. fs 모듈의 `writeFile`을 통해 output 쓰기
+
+만약 `update.js` 라는 파일명으로 스크립트를 작성했다면 다음 명령어를 실행하여 실제로 파일이 생기는지 확인해봅시다.
+
+```bash
+node update
+```
+
+### YAML 스크립트 작성
+
+이제 진짜 GitHub Actions를 사용할 차례입니다! 앞서 정리한 자동화 방식을 좀 더 구체화 해보겠습니다.
+
+1. feature 브랜치에서 한글 JSON을 작성하여 commit & push
+2. base 브랜치로 PR
+3. 한글 JSON 파일이 변경되었다면 workflow 실행
+4. 한글 JSON을 기반으로 영어 JSON을 알아서 생성
+5. 변경된 내용을 commit & push
+
+프로젝트 루트 > .github > workflows > action.yaml(혹은 .yml, 파일명은 자유)을 생성하고 다음 순서를 따라줍니다.
+
+> 가독성을 위해 코드 블록을 나눴지만 모두 하나의 스크립트이며, 참고한 링크를 단계마다 걸어두었습니다.
+
+1. 특정 브랜치로 PR(event)이 생성되고 특정 경로가 변경되었을 때 workflow 실행([Workflow syntax](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions))
+
+```yaml
+name: Update JSON
+
+on:
+  pull_request:
+    branches:
+      - 'base 브랜치'
+    paths:
+      - '한글 JSON 위치'
+```
+
+2. `steps`는 위에서부터 순차적으로 진행, `uses`로 외부 action 사용
+
+   1. 작업 중인 저장소와 브랜치로 checkout, `ref`는 [git push를 할 때 필요](https://github.com/actions/checkout/issues/317#issuecomment-737107262)
+
+   2. Node.js 설치
+
+   3. JSON update 스크립트(update.js) 실행
+
+```yaml
+jobs:
+  update-en-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }} # 후에 push를 위해 필요
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Run Script
+        run: node update
+```
+
+3. staged된 파일이 있어 diff가 true가 아닌 값으로 종료되면,()
+
+   1. user를 github bot으로 세팅(`git config`) ([참고](https://github.com/actions/checkout/discussions/479#discussioncomment-625461))
+   2. 변동 사항이 있는 파일을 staging area로 이동(`git add .`)
+   3. staged된 파일이 있어 diff가 0이 아닌 상태로 종료되면 commit & push, 그게 아니고 staged된 파일이 없으면 workflow 콘솔에 로그(`echo`)만 남김 ([참고](https://stackoverflow.com/a/28772375/17685810))
+
+```yaml
+# steps 하위 들여쓰기로 작성
+- name: Commit and Push
+  run: |
+    git config --local user.name "github-actions[bot]"
+    git config --local user.email "github-actions[bot]@users.noreply.github.com"
+
+    git add .
+
+    if ! git diff --staged --quiet; then
+      git commit -m "봇이 남길 commit message"
+      git push
+    else
+      echo "아무 변화 없음"
+    fi
+```
+
+여기까지 YAML 스크립트를 잘 작성해주었다면 실제로 타겟 파일을 수정하여 commit하고, PR을 생성하여 GitHub Actions이 돌아가는지 확인해보고, 해당 PR 안에 GitHub 모양 프로필을 가진 bot이 대신해서 작업을 해줬는지 확인해보면 끝입니다!
+
+<CaptionImage
+  alt={`GitHub Actions 적용 예시`}
+  src={`/images/i18n-automation/example.png`}
+  width={672}
+  height={58}
+  caption={'저의 commit message는 모른 척 해주세요!'}
+/>
+
+## 마치며
+
+지금까지 GitHub Actions을 활용하여 다국어 처리 작업을 자동화하는 과정을 살펴보았습니다. 사실 "자동화"라는 키워드를 사용하기엔 아직 한글 JSON을 (사람이) 직접 만들어야 하는 허점이 있지만, 기존에 직접 만들던 영어 JSON이 개발자의 관심사 밖으로 밀려난 것만 해도 큰 수확이라 생각합니다. 이렇게 아낀 시간을 동료와의 커뮤니케이션이나 코드 품질 향상에 더 투자할 수 있으니까요 🙆‍♂️
+
+GitHub Actions와 YAML을 처음 접해보았지만 직관적인 문법과 많은 레퍼런스로 러닝커브가 생각보다 낮았고, 그 활용 사례가 다양하기 때문에 후에 다른 자동화가 필요한 workflow(테스트, 배포 등)를 추가할 수 있는 가능성을 열 수 있었습니다. 이 글에선 GitHub Actions에서 공식적으로 제공하는 action만을 사용했지만, 이 외에도 다른 감사한 분들이 미리 정의해놓은 추상화된 action들을 `uses`로 바로 쓸 수 있는 것도 큰 장점입니다([재밌는 action 예시](https://github.com/jckdotim/korean-grammar-action))!
+
+**컴퓨터는 거짓말을 하지 않는다**는 말처럼, 사람을 믿기 힘들고 귀찮은 작업이 생겼을 때 잠시 컴퓨터의 도움을 받는 건 어떨까요?
