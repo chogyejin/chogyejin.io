@@ -150,10 +150,10 @@ export default function Blog({ params }: Props) {
           <Views slug={post.slug} />
         </Suspense>
       </div>
-      <article className="prose prose-quoteless prose-neutral dark:prose-invert">
+      <Toc headings={headings} />
+      <article className="prose prose-quoteless prose-neutral dark:prose-invert mb-10">
         <CustomMDX source={post.content} />
       </article>
-      <Toc headings={headings} />
       <Comments />
     </section>
   );
