@@ -5,8 +5,8 @@ import Form from './form';
 import { auth } from '@/auth';
 
 export const metadata = {
-  title: 'Guestbook',
-  description: 'Sign my guestbook and leave your mark.',
+  title: '방명록',
+  description: '편하게 방명록을 남겨주세요!',
 };
 
 export default function GuestbookPage() {

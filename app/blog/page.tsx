@@ -5,8 +5,8 @@ import { Tags } from 'app/components/tags';
 import { getFormattedDate } from 'app/utils/date';
 
 export const metadata = {
-  title: 'Blog',
-  description: 'Read my thoughts on software development, design, and more.',
+  title: '글',
+  description: '쉽게 읽히고 유용한 글을 전달하고자 합니다.',
 };
 
 export default function BlogPage() {
@@ -14,7 +14,7 @@ export default function BlogPage() {
 
   return (
     <section>
-      <h1 className="font-medium text-2xl mb-8 tracking-tighter">글 목록</h1>
+      <h1 className="font-medium text-2xl mb-4 tracking-tighter">글 목록</h1>
       {allBlogs
         .sort((a, b) => {
           if (
