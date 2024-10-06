@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 const COMMENT_ID = 'comments';
 
-const Comments = () => {
+export default function Comments() {
   useEffect(() => {
     const script = document.createElement('script');
     const commentsDiv = document.getElementById(COMMENT_ID);
@@ -33,6 +33,4 @@ const Comments = () => {
   }, []);
 
   return <div id={COMMENT_ID} />;
-};
-
-export default Comments;
+}
