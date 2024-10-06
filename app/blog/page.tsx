@@ -3,19 +3,34 @@ import { Suspense } from 'react';
 import { getBlogPosts } from 'app/db/blog';
 import { Tags } from 'app/components/tags';
 import { getFormattedDate } from 'app/utils/date';
+import { TagsViewer } from 'app/components/tags-viewer';
 
 export const metadata = {
   title: '글',
   description: '쉽게 읽히고 유용한 글을 전달하고자 합니다.',
 };
 
-export default function BlogPage() {
+export default function BlogPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) {
+  const { tag: selectedTag } = searchParams;
   const allBlogs = getBlogPosts();
+  const filteredBlogs = selectedTag
+    ? allBlogs.filter(({ metadata }) => metadata.tags?.includes(selectedTag))
+    : allBlogs;
+
+  const flattedTags = allBlogs
+    .map(({ metadata: { tags } }) => tags ?? [])
+    .flat();
+  const allTags = [...new Set(flattedTags)];
 
   return (
     <section>
-      <h1 className="font-medium text-2xl mb-4 tracking-tighter">글 목록</h1>
-      {allBlogs
+      <h1 className="font-medium text-2xl mb-2 tracking-tighter">글 목록</h1>
+      <TagsViewer className="mb-6" tags={allTags} />
+      {filteredBlogs
         .sort((a, b) => {
           if (
             new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)
