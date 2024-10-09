@@ -2,6 +2,7 @@
 
 import { Tags } from 'app/components/tags';
 import { cx } from 'app/utils/cx';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export function TagsViewer({
@@ -13,19 +14,25 @@ export function TagsViewer({
 }) {
   const [isTagsOpen, setIsTagsOpen] = useState(false);
 
+  const searchParams = useSearchParams();
+  const selectedTag = searchParams.get('tag');
+
   return (
     <div className={className}>
-      <button
-        className="flex items-center"
-        onClick={() => setIsTagsOpen(!isTagsOpen)}
-      >
-        <span className="font-normal text-xl">태그</span>
-        <ArrowIcon
-          className={cx('w-6 h-6 transition duration-300', {
-            'rotate-180': isTagsOpen,
-          })}
-        />
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          className="flex items-center"
+          onClick={() => setIsTagsOpen(!isTagsOpen)}
+        >
+          <span className="font-normal text-xl">태그</span>
+          <ArrowIcon
+            className={cx('w-6 h-6 transition duration-300', {
+              'rotate-180': isTagsOpen,
+            })}
+          />
+        </button>
+        {selectedTag && <span># {selectedTag}</span>}
+      </div>
       <Tags
         tags={tags}
         className={cx(
