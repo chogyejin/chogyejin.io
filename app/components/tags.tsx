@@ -39,7 +39,7 @@ export function Tags({
       return;
     }
 
-    router.push(pathname + '?' + createQueryString('tag', tag));
+    router.push('/blog' + '?' + createQueryString('tag', tag));
   };
 
   if (tags.length === 0) {
