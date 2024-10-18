@@ -23,6 +23,10 @@ const OPEN_SOURCES = [
     name: 'Stackflow',
     link: 'https://github.com/daangn/stackflow/pulls?q=involves%3Achogyejin',
   },
+  {
+    name: 'Next.js Commerce',
+    link: 'https://github.com/vercel/commerce/pulls?q=involves%3Achogyejin',
+  },
 ] as const;
 
 export default function Page() {
