@@ -12,14 +12,15 @@ import { isDevelopment } from 'app/constants/env';
 import { Tags } from 'app/components/tags';
 import { getFormattedDateWithAgo } from 'app/utils/date';
 
-type Props = {
-  params: { slug: string };
-};
+type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({
   params,
-}: Props): Promise<Metadata | undefined> {
-  const post = getBlogPosts().find((post) => post.slug === params.slug);
+}: {
+  params: Params;
+}): Promise<Metadata | undefined> {
+  const { slug } = await params;
+  const post = getBlogPosts().find((post) => post.slug === slug);
   if (!post) {
     return;
   }
@@ -101,8 +102,9 @@ function extractHeadings(content: string) {
   return headings;
 }
 
-export default function Blog({ params }: Props) {
-  const post = getBlogPosts().find((post) => post.slug === params.slug);
+export default async function Blog({ params }: { params: Params }) {
+  const { slug } = await params;
+  const post = getBlogPosts().find((post) => post.slug === slug);
 
   if (!post) {
     notFound();

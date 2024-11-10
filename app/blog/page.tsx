@@ -10,12 +10,14 @@ export const metadata = {
   description: '쉽게 읽히고 유용한 글을 전달하고자 합니다.',
 };
 
-export default function BlogPage({
+type SearchParams = Promise<{ [key: string]: string | undefined }>;
+
+export default async function BlogPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | undefined };
+  searchParams: SearchParams;
 }) {
-  const { tag: selectedTag } = searchParams;
+  const { tag: selectedTag } = await searchParams;
   const allBlogs = getBlogPosts();
   const filteredBlogs = selectedTag
     ? allBlogs.filter(({ metadata }) => metadata.tags?.includes(selectedTag))
