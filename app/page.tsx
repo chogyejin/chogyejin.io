@@ -29,6 +29,14 @@ const OPEN_SOURCES = [
   },
 ] as const;
 
+const CONTACTS = [
+  { name: 'GitHub', link: 'https://github.com/chogyejin' },
+  {
+    name: 'LinkedIn',
+    link: 'https://www.linkedin.com/in/%EA%B3%84%EC%A7%84-%EC%A1%B0-a53248253/',
+  },
+] as const;
+
 export default function Page() {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -73,7 +81,7 @@ export default function Page() {
           성장의 발판이 된다고 생각합니다.
         </p>
       </div>
-      <div>
+      <div className="mb-12">
         <h2 className="font-medium text-lg">Open sources</h2>
         <ul className="list-dash pl-3 text-neutral-900 dark:text-neutral-300">
           {OPEN_SOURCES.map(({ name, link }) => (
@@ -83,6 +91,21 @@ export default function Page() {
               </a>
             </li>
           ))}
+        </ul>
+      </div>
+      <div>
+        <h2 className="font-medium text-lg">Links</h2>
+        <ul className="list-dash pl-3 text-neutral-900 dark:text-neutral-300">
+          {CONTACTS.map(({ name, link }) => (
+            <li key={name}>
+              <a href={link} className="hover:underline" target="_blank">
+                {name}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a href="mailto:whrpwls96@naver.com">whrpwls96@naver.com</a>
+          </li>
         </ul>
       </div>
     </section>
