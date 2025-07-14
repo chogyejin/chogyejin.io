@@ -82,7 +82,7 @@ export default function Page() {
         </p>
       </div>
       <div className="mb-12">
-        <h2 className="font-medium text-lg">Open sources</h2>
+        <h2 className="font-medium text-lg">Open Source Contributions</h2>
         <ul className="list-dash pl-3 text-neutral-900 dark:text-neutral-300">
           {OPEN_SOURCES.map(({ name, link }) => (
             <li key={name}>
