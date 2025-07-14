@@ -3,7 +3,7 @@
 - chogyejin.io inspired by [leerob.io](https://github.com/leerob/leerob.io)
 - Check out [this article](https://chogyejin-io.vercel.app/blog/2024-blog) for the production details!
 
-## How To Run In Local(Node.js v18.17+)
+## How To Run In Local(Node.js v22.17.0)
 
 ```bash
 git clone https://github.com/chogyejin/chogyejin.io.git
@@ -15,8 +15,9 @@ bun dev
 ## Skills
 
 - Package Manager: [Bun](https://bun.sh/) 1.0.29
-- Framework: [Next.js App Router](https://nextjs.org/docs/app) 14.2.3
-- Authentication: [Auth.js](https://authjs.dev/) 5.0.0-beta.15
+- UI Library: [React](https://react.dev/) 19.1.0
+- Framework: [Next.js App Router](https://nextjs.org/docs/app) 15.3.5
+- Authentication: [Auth.js](https://authjs.dev/) 5.0.0-beta.29
 - Styling: [Tailwind CSS](https://tailwindcss.com/) 3.4.3
 - Markdown: [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote) 4.4.1
 - Hosting & Deployment: [Vercel](https://vercel.com)(Free plan)
