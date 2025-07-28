@@ -11,47 +11,58 @@ export async function GET(req: NextRequest) {
   ).then((res) => res.arrayBuffer());
   const fontData = await font;
 
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          backgroundImage: 'url(https://chogyejin-io.vercel.app/og-bg.png)',
-        }}
-      >
+  try {
+    return new ImageResponse(
+      (
         <div
           style={{
-            marginLeft: 190,
-            marginRight: 190,
+            height: '100%',
+            width: '100%',
             display: 'flex',
-            fontSize: 130,
-            fontFamily: 'Noto Sans Korean',
-            letterSpacing: '-0.05em',
-            fontStyle: 'normal',
-            color: 'white',
-            lineHeight: '120px',
-            whiteSpace: 'pre-wrap',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            backgroundImage: 'url(https://chogyejin-io.vercel.app/og-bg.png)',
           }}
         >
-          {postTitle}
+          <div
+            style={{
+              marginLeft: 190,
+              marginRight: 190,
+              display: 'flex',
+              fontSize: 130,
+              fontFamily: 'Noto Sans Korean',
+              letterSpacing: '-0.05em',
+              fontStyle: 'normal',
+              color: 'white',
+              lineHeight: '120px',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {postTitle}
+          </div>
         </div>
-      </div>
-    ),
-    {
-      width: 1920,
-      height: 1080,
-      fonts: [
-        {
-          name: 'Noto Sans Korean',
-          data: fontData,
-          style: 'normal',
-        },
-      ],
+      ),
+      {
+        width: 1920,
+        height: 1080,
+        fonts: [
+          {
+            name: 'Noto Sans Korean',
+            data: fontData,
+            style: 'normal',
+          },
+        ],
+      }
+    );
+  } catch (e) {
+    if (!(e instanceof Error)) {
+      return;
     }
-  );
+
+    console.log(`${e.message}`);
+    return new Response(`Failed to generate the image`, {
+      status: 500,
+    });
+  }
 }
