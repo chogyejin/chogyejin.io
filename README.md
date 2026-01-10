@@ -9,14 +9,19 @@
 git clone https://github.com/chogyejin/chogyejin.io.git
 cd chogyejin.io
 bun install
-bun dev
+bun run dev
+```
+
+```bash
+bun run build
+bun run start
 ```
 
 ## Skills
 
-- Package Manager: [Bun](https://bun.sh/) 1.0.29
+- Package Manager: [Bun](https://bun.sh/) 1.3.5
 - UI Library: [React](https://react.dev/) 19.1.0
-- Framework: [Next.js App Router](https://nextjs.org/docs/app) 15.3.5
+- Framework: [Next.js App Router](https://nextjs.org/docs/app) 15.3.8
 - Authentication: [Auth.js](https://authjs.dev/) 5.0.0-beta.29
 - Styling: [Tailwind CSS](https://tailwindcss.com/) 3.4.3
 - Markdown: [next-mdx-remote](https://github.com/hashicorp/next-mdx-remote) 4.4.1
