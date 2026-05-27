@@ -10,7 +10,8 @@ import Comments from 'app/components/comments';
 import Toc, { TocItem } from 'app/blog/[slug]/toc';
 import { isDevelopment } from 'app/constants/env';
 import { Tags } from 'app/components/tags';
-import { getFormattedDateWithAgo } from 'app/utils/date';
+import { getFormattedDate, getMonthsDiff } from 'app/utils/date';
+import { OutdatedNotice } from 'app/components/outdated-notice';
 
 type Params = Promise<{ slug: string }>;
 
@@ -111,6 +112,7 @@ export default async function Blog({ params }: { params: Params }) {
   }
 
   const headings = extractHeadings(post.content);
+  const monthsDiff = getMonthsDiff(post.metadata.publishedAt);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -145,13 +147,14 @@ export default async function Blog({ params }: { params: Params }) {
       <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {getFormattedDateWithAgo(post.metadata.publishedAt)}
+            {getFormattedDate(post.metadata.publishedAt)}
           </p>
         </Suspense>
         <Suspense fallback={<p className="h-5" />}>
           <Views slug={post.slug} />
         </Suspense>
       </div>
+      <OutdatedNotice monthsDiff={monthsDiff} />
       <Toc headings={headings} />
       <article className="prose prose-quoteless prose-neutral dark:prose-invert mb-10">
         <CustomMDX source={post.content} />

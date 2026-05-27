@@ -17,24 +17,22 @@ export function getFormattedDate(date: string) {
   return `${fullDate}`;
 }
 
-export function getFormattedDateWithAgo(date: string) {
+export function getMonthsDiff(date: string) {
   const targetDate = new Date(date);
-  const currentDate = new Date();
-  let formattedDate = '';
 
-  const yearsAgo = currentDate.getFullYear() - targetDate.getFullYear();
-  const monthsAgo = currentDate.getMonth() - targetDate.getMonth();
-  const daysAgo = currentDate.getDate() - targetDate.getDate();
-
-  if (yearsAgo > 0) {
-    formattedDate = `${yearsAgo}년 전`;
-  } else if (monthsAgo > 0) {
-    formattedDate = `${monthsAgo}달 전`;
-  } else if (daysAgo > 0) {
-    formattedDate = `${daysAgo}일 전`;
-  } else {
-    formattedDate = '오늘';
+  const [datePart] = date.split('T');
+  const [year, month, day] = datePart.split('-').map(Number);
+  if (
+    targetDate.getFullYear() !== year ||
+    targetDate.getMonth() + 1 !== month ||
+    targetDate.getDate() !== day
+  ) {
+    throw new Error(`Invalid date: ${date}`);
   }
 
-  return `${getFormattedDate(date)} (${formattedDate})`;
+  const currentDate = new Date();
+  return (
+    (currentDate.getFullYear() - targetDate.getFullYear()) * 12 +
+    (currentDate.getMonth() - targetDate.getMonth())
+  );
 }
