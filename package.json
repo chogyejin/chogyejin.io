@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "bun --bun next dev",
     "build": "bun --bun next build",
-    "start": "bun --bun next start"
+    "start": "bun --bun next start",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "2.20.0",
@@ -31,9 +32,7 @@
     "@types/node": "^22.20.1",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.5",
     "eslint-config-next": "16.2.10"
   }
 }
