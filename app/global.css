@@ -1,6 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* Preserve v3 content globs (in addition to v4 automatic detection) */
+@source '../content/**/*.mdx';
+@source '../public/**/*.svg';
+
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Replaces v3 theme.listStyleType.dash */
+@utility list-dash {
+  list-style-type: '- ';
+}
+
+/* Replaces v3 theme.typography.quoteless (strip blockquote quote marks) */
+.prose-quoteless blockquote p:first-of-type::before,
+.prose-quoteless blockquote p:first-of-type::after {
+  content: none;
+}
 
 ::selection {
   background-color: #47a3f3;
@@ -88,7 +107,7 @@ html {
 .prose h2,
 h3,
 h4 {
-  @apply font-medium tracking-tighter !important;
+  @apply font-medium! tracking-tighter!;
 }
 
 .prose strong {
