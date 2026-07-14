@@ -42,7 +42,7 @@ export function Navbar() {
                 src="https://github.com/chogyejin.png"
                 width="30"
                 height="30"
-                className="mx-2 rounded-full border"
+                className="mx-2 rounded-full border border-gray-200"
               />
             </a>
           </div>
