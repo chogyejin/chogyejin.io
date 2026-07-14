@@ -10,6 +10,7 @@ import {
   stylexViteConfig,
   stylexTokens,
 } from './sandpack-files';
+import { NoticeBox } from './notice-box';
 import React, { Suspense } from 'react';
 
 class ErrorBoundary extends React.Component<
@@ -28,9 +29,9 @@ class ErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="px-4 py-3 border border-red-700 bg-red-200 rounded-sm p-1 text-sm flex items-center text-red-900 mb-8">
+        <NoticeBox variant="danger">
           <div className="w-full callout">{this.props.fallback}</div>
-        </div>
+        </NoticeBox>
       );
     }
 
