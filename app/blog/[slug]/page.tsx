@@ -140,11 +140,11 @@ export default async function Blog({ params }: { params: Params }) {
           __html: JSON.stringify(jsonLd),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tighter max-w-[650px]">
+      <h1 className="title font-medium text-2xl tracking-tighter max-w-article">
         {post.metadata.title}
       </h1>
       <Tags tags={post.metadata.tags ?? []} />
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
+      <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-article">
         <Suspense fallback={<p className="h-5" />}>
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
             {getFormattedDate(post.metadata.publishedAt)}
