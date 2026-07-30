@@ -27,6 +27,10 @@ const OPEN_SOURCES = [
     name: 'Next.js Commerce',
     link: 'https://github.com/vercel/commerce/pulls?q=involves%3Achogyejin',
   },
+  {
+    name: 'saml2aws',
+    link: 'https://github.com/Versent/saml2aws/issues?q=involves%3Achogyejin',
+  },
 ] as const;
 
 const CONTACTS = [
