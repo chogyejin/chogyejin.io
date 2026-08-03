@@ -21,8 +21,9 @@ const eslintConfig = defineConfig([
       'better-tailwindcss': {
         // v4 has no JS config file; the theme lives in the CSS entry point.
         entryPoint: 'app/global.css',
-        // Local class-merging helper, in addition to the presets the plugin knows.
-        callees: ['cx'],
+        // `cx` needs no config: it is already one of the plugin's default
+        // selectors. Setting `callees` would *replace* all 44 defaults, not
+        // extend them, silently dropping clsx/cva/cn/twMerge coverage.
       },
     },
     rules: {

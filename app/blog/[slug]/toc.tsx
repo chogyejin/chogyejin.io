@@ -101,7 +101,7 @@ function Toc({ headings }: Props) {
                 'flex py-1 transition-all',
                 currentIndex === index
                   ? 'font-bold text-neutral-900 dark:text-neutral-200'
-                  : 'text-neutral-700 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200',
+                  : 'text-neutral-700 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200',
                 {
                   'ps-5': level === 3,
                 }
