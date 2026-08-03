@@ -107,9 +107,8 @@ html {
   @apply m-0;
 }
 
-.prose h2,
-h3,
-h4 {
+/* Must stay scoped to .prose — a bare `h3, h4` here leaks to every heading. */
+.prose :is(h2, h3, h4) {
   @apply font-medium! tracking-tighter!;
 }
 

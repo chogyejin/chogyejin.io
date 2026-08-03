@@ -30,7 +30,7 @@ export default async function BlogPage({
 
   return (
     <section>
-      <h1 className="font-medium text-2xl mb-2 tracking-tighter">글 목록</h1>
+      <h1 className="mb-2 text-2xl font-medium tracking-tighter">글 목록</h1>
       <TagsViewer className="mb-6" tags={allTags} />
       {filteredBlogs
         .sort((a, b) => {
@@ -44,11 +44,11 @@ export default async function BlogPage({
         .map((post) => (
           <Link
             key={post.slug}
-            className="flex flex-col space-y-1 mb-4"
+            className="mb-4 flex flex-col space-y-1"
             href={`/blog/${post.slug}`}
           >
-            <div className="w-full flex flex-col">
-              <p className="text-neutral-900 dark:text-neutral-100 tracking-tight mr-3">
+            <div className="flex w-full flex-col">
+              <p className="mr-3 tracking-tight text-neutral-900 dark:text-neutral-100">
                 {post.metadata.title}
               </p>
               <Tags tags={post.metadata.tags ?? []} />

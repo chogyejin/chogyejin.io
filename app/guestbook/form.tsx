@@ -22,7 +22,7 @@ export default function Form() {
         name="entry"
         type="text"
         required
-        className="pl-4 pr-32 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full border-neutral-300 rounded-md bg-gray-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+        className="mt-1 block w-full rounded-md border-neutral-300 bg-gray-100 py-2 pr-32 pl-4 text-neutral-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
       />
       <SubmitButton />
     </form>
@@ -34,7 +34,7 @@ function SubmitButton() {
 
   return (
     <button
-      className="flex items-center justify-center absolute right-1 top-1 px-2 py-1 font-medium h-8 bg-neutral-200 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-100 rounded-sm w-16"
+      className="absolute top-1 right-1 flex h-8 w-16 items-center justify-center rounded-sm bg-neutral-200 px-2 py-1 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
       disabled={pending}
       type="submit"
     >

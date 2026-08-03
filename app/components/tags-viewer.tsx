@@ -24,9 +24,9 @@ export function TagsViewer({
           className="flex items-center"
           onClick={() => setIsTagsOpen(!isTagsOpen)}
         >
-          <span className="font-normal text-xl">태그</span>
+          <span className="text-xl font-normal">태그</span>
           <ArrowIcon
-            className={cx('w-6 h-6 transition duration-300', {
+            className={cx('size-6 transition duration-300', {
               'rotate-180': isTagsOpen,
             })}
           />
@@ -36,7 +36,7 @@ export function TagsViewer({
       <Tags
         tags={tags}
         className={cx(
-          `transition-all duration-300 overflow-hidden ${
+          `overflow-hidden transition-all duration-300 ${
             isTagsOpen ? 'max-h-screen' : 'max-h-0'
           }`
         )}

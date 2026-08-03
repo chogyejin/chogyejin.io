@@ -47,17 +47,16 @@ export function Tags({
   }
 
   return (
-    <ul className={cx('flex flex-wrap gap-2 my-1', className)}>
+    <ul className={cx('my-1 flex flex-wrap gap-2', className)}>
       {tags.map((tag, index) => (
         <li
           key={index}
           className={cx(
-            'dark:bg-gray-600',
-            'transition duration-300 text-sm truncate rounded-lg border border-gray-400 dark:border-gray-600',
-            'hover:bg-white hover:text-gray-400 hover:border-gray-400 dark:hover:border-gray-600',
+            'truncate rounded-lg border border-gray-400 text-sm transition duration-300 dark:border-gray-600',
+            'hover:border-gray-400 hover:bg-white hover:text-gray-400 dark:hover:border-gray-600',
             isAllTags && selectedTag === tag
-              ? 'text-gray-400 bg-white dark:bg-white dark:border-gray-600'
-              : 'text-white bg-gray-400'
+              ? 'bg-white text-gray-400 dark:bg-white'
+              : 'bg-gray-400 text-white dark:bg-gray-600'
           )}
         >
           <button className="px-2" onClick={(e) => handleTagClick(e, tag)}>

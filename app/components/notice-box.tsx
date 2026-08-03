@@ -21,7 +21,7 @@ export function NoticeBox({
 }) {
   return (
     <div
-      className={`flex items-center mb-8 px-4 py-3 text-sm border rounded-sm ${variantClasses[variant]}`}
+      className={`mb-8 flex items-center rounded-sm border px-4 py-3 text-sm ${variantClasses[variant]}`}
     >
       {children}
     </div>

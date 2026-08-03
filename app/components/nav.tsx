@@ -15,10 +15,10 @@ const navItems = {
 
 export function Navbar() {
   return (
-    <aside className="-ml-2 mb-16 tracking-tight">
+    <aside className="mb-16 -ml-2 tracking-tight">
       <div className="lg:sticky lg:top-20">
         <nav
-          className="flex flex-row justify-between relative px-0 pb-0 fade md:overflow-auto scroll-pr-6 md:relative"
+          className="relative flex scroll-pr-6 flex-row justify-between px-0 pb-0 md:relative md:overflow-auto"
           id="nav"
         >
           <div className="flex">
@@ -27,7 +27,7 @@ export function Navbar() {
                 <Link
                   key={path}
                   href={path}
-                  className="transition-all hover:text-neutral-800 dark:hover:text-neutral-200 flex align-middle relative py-1 px-2"
+                  className="relative flex px-2 py-1 align-middle transition-all hover:text-neutral-800 dark:hover:text-neutral-200"
                 >
                   {name}
                 </Link>

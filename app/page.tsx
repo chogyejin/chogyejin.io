@@ -56,17 +56,17 @@ export default function Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <h1 className="font-medium text-2xl mb-8 tracking-tighter">
+      <h1 className="mb-8 text-2xl font-medium tracking-tighter">
         chogyejin.io
       </h1>
       <div className="mb-12">
-        <p className="prose prose-neutral dark:prose-invert mb-2">
+        <p className="prose mb-2 prose-neutral dark:prose-invert">
           세상의 크고 작은 문제를 해결하기 좋아하는 프론트엔드 개발자
           조계진입니다. 조직의 성과에 기여하기 위해 다음과 같은 두 가지 기준을
           지키고자 노력합니다.
         </p>
         <h3 className="font-medium">분할 정복</h3>
-        <p className="prose prose-neutral dark:prose-invert mb-2">
+        <p className="prose mb-2 prose-neutral dark:prose-invert">
           복잡한 문제를 이해하기 쉬운 작은 문제로 분할하고, 각 사례에 대해 모범
           사례(
           <a href="https://en.wikipedia.org/wiki/Best_practice" target="_blank">
@@ -86,7 +86,7 @@ export default function Page() {
         </p>
       </div>
       <div className="mb-12">
-        <h2 className="font-medium text-lg">Open Source Contributions</h2>
+        <h2 className="text-lg font-medium">Open Source Contributions</h2>
         <ul className="list-dash pl-3 text-neutral-900 dark:text-neutral-300">
           {OPEN_SOURCES.map(({ name, link }) => (
             <li key={name}>
@@ -98,7 +98,7 @@ export default function Page() {
         </ul>
       </div>
       <div>
-        <h2 className="font-medium text-lg">Links</h2>
+        <h2 className="text-lg font-medium">Links</h2>
         <ul className="list-dash pl-3 text-neutral-900 dark:text-neutral-300">
           {CONTACTS.map(({ name, link }) => (
             <li key={name}>
