@@ -12,11 +12,11 @@ tags: ['React', 'Next.js', 'Vercel', 'Blog']
 보통 블로그란 맛집리뷰 혹은 내돈내산을 떠올리게 하지만, 개발자들에게 블로그는 **기술 블로그**로 통용됩니다.
 
 <CaptionImage
-  alt={`블로그 예시`}
-  src={`/images/2024-blog/blog-example.png`}
-  width={640 / 2}
-  height={542 / 2}
-  caption={'(출처: 내 최애 막국수집 리뷰)'}
+  alt="블로그 예시"
+  src="/images/2024-blog/blog-example.png"
+  width="320"
+  height="271"
+  caption="(출처: 내 최애 막국수집 리뷰)"
 />
 
 그럼 기술 블로그는 왜 중요한 걸까요? 요즘 핫한 고물로봇 ChatGPT에게 물어봤습니다.
@@ -136,10 +136,10 @@ App Router에선 static(객체 형태) 혹은 dynamic(함수 형태) metadata를
 카카오톡, 디스코드 등에서 링크를 공유하면 이미지 하나와 여러 설명들이 나오는 걸 보신 적이 있으신가요? Open Graph(이하 OG)는 이와 같이 링크를 공유했을 때 시각적인 추가 정보를 제공해주는 프로토콜입니다. 아래는 leerob 블로그 글 중 하나에 대한 디스코드에서의 OG입니다.
 
 <Image
-  alt={`오픈 그래프 이미지 예시`}
-  src={`/images/2024-blog/og-example.png`}
-  width={1112}
-  height={642}
+  alt="오픈 그래프 이미지 예시"
+  src="/images/2024-blog/og-example.png"
+  width="1112"
+  height="642"
 />
 
 App Router의 파일 컨벤션 중 [`opengraph-image`](https://nextjs.org/docs/app/api-reference/file-conventions/metadata/opengraph-image)는 모든 페이지에 보여질 기본 OG 이미지를 정할 수 있습니다. 저는 웹으로 바로 사용할 수 있는 무료 에디터를 이용하여 이미지를 생성해줬고, 게시물(post)마다 동적인 OG를 따로 생성하게끔 했습니다.
@@ -159,11 +159,11 @@ const ogImage = image
 이제 og route 안의 `ImageResponse` 인스턴스에 세팅되어 있던 폰트인 `kaisei-tokumin-bold`를 날려버리고 아름다운 한글이 지원되는 폰트를 가져와서 commit, push를 했는데 어라? 빌드가 실패합니다.
 
 <CaptionImage
-  alt={`edge function 에러 메세지`}
-  src={`/images/2024-blog/edge-error-message.png`}
-  width={2392}
-  height={90}
-  caption={'(0.01 MB로 실패하는 빌드)'}
+  alt="edge function 에러 메세지"
+  src="/images/2024-blog/edge-error-message.png"
+  width="2392"
+  height="90"
+  caption="(0.01 MB로 실패하는 빌드)"
 />
 
 이유는 [Edge Runtime](https://vercel.com/docs/functions/runtimes/edge-runtime)의 [크기 제한](https://vercel.com/docs/functions/runtimes#size-limits) 때문입니다.
@@ -175,11 +175,11 @@ export const runtime = 'edge';
 Edge Runtime은 작고 간단한 함수를 통해 짧은 지연 시간으로 정보를 제공해주지만, 크기 제한이 있고 일부 npm 패키지를 사용하지 못합니다(여기서 크기는 번들링된 후의 함수와 종속성의 압축된 크기입니다). Hobby 플랜에서는 제한이 1 MB인데, 웬만한 한글 폰트들은 크기가 크기 때문에 저 정도 크기는 우습게 넘깁니다. 또한 현재로썬 로컬 개발 환경에서 크기를 미리 파악해볼 뾰족한 수가 없는 것 같습니다(관련 [레딧글](https://www.reddit.com/r/nextjs/comments/1b2vevb/how_to_check_edge_function_size_for_vercel/) 및 [디스커션](https://github.com/vercel/next.js/discussions/61541)).
 
 <CaptionImage
-  alt={`edge function 에러 로그`}
-  src={`/images/2024-blog/edge-error-log.png`}
-  width={1074}
-  height={724}
-  caption={'(사투의 흔적)'}
+  alt="edge function 에러 로그"
+  src="/images/2024-blog/edge-error-log.png"
+  width="1074"
+  height="724"
+  caption="(사투의 흔적)"
 />
 
 사투 끝에 저는 [NotoSansKR-Hestia](https://github.com/theeluwin/NotoSansKR-Hestia)를 이용하여 1 MB에 간신히 맞춰 한국인의 긍지를 보여주었습니다.

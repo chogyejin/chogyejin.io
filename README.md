@@ -40,7 +40,6 @@ bun run start
 ## To Be Added..
 
 - Theme switch
-- Scroll indicator
 - Front matter(updatedAt, series, ...)
 - Korean spell check in PR using [GitHub Actions](https://github.com/features/actions)
 - [Feature-Sliced Design](https://feature-sliced.design/) structure

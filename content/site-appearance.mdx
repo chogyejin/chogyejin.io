@@ -16,27 +16,27 @@ tags: ['Next.js', '구글', '네이버', 'Structured data']
 1. 속성 추가
 
 <Image
-  alt={`구글 속성 추가 예시`}
-  src={`/images/site-appearance/google-step1.png`}
-  width={1544}
-  height={680}
+  alt="구글 속성 추가 예시"
+  src="/images/site-appearance/google-step1.png"
+  width="1544"
+  height="680"
 />
 
 2. URL 접두어 선택 후 사이트 URL 입력(예시: https://www.example.com)
 
 <Image
-  alt={`구글 URL 접두어 예시`}
-  src={`/images/site-appearance/google-step2.png`}
-  width={1670}
-  height={1388}
+  alt="구글 URL 접두어 예시"
+  src="/images/site-appearance/google-step2.png"
+  width="1670"
+  height="1338"
 />
 3. HTML 태그를 선택하고 `<meta>`태그 안의 content 값(`0kbD6...`)을 복사
 
 <Image
-  alt={`구글 URL 접두어 예시`}
-  src={`/images/site-appearance/google-step3.png`}
-  width={1436}
-  height={1066}
+  alt="구글 HTML 태그 소유권 확인 예시"
+  src="/images/site-appearance/google-step3.png"
+  width="1436"
+  height="1066"
 />
 4. 메타 데이터를 export 하는 곳에서 `metadata.verification.google`에 값 입력 후 배포
 
@@ -67,18 +67,18 @@ export const metadata: Metadata = {
 1. URL 입력 후 사이트 등록(예시: https://www.example.com)
 
 <Image
-  alt={`구글 URL 접두어 예시`}
-  src={`/images/site-appearance/naver-step1.png`}
-  width={2196}
-  height={566}
+  alt="네이버 사이트 등록 예시"
+  src="/images/site-appearance/naver-step1.png"
+  width="2196"
+  height="566"
 />
 2. HTML 태그를 선택하고 `<meta>`태그 안의 content 값(`7ea07...`)을 복사
 
 <Image
-  alt={`구글 URL 접두어 예시`}
-  src={`/images/site-appearance/naver-step2.png`}
-  width={1506}
-  height={386}
+  alt="네이버 HTML 태그 소유권 확인 예시"
+  src="/images/site-appearance/naver-step2.png"
+  width="1506"
+  height="386"
 />
 
 3. 메타 데이터를 export 하는 곳에서 `metadata.verification.other['naver-site-verification']`에 값 입력 후 배포
@@ -100,10 +100,10 @@ export const metadata: Metadata = {
 5. 목록에서 사이트를 클릭한 후 요청 메뉴 중 **웹 페이지 수집**과 **사이트맵 제출** 적용
 
 <Image
-  alt={`구글 URL 접두어 예시`}
-  src={`/images/site-appearance/naver-step5.png`}
-  width={1506}
-  height={386}
+  alt="네이버 웹 페이지 수집 및 사이트맵 제출 예시"
+  src="/images/site-appearance/naver-step5.png"
+  width="2238"
+  height="1100"
 />
 > 개인적으로 네이버는 구글에 비해 등록하기 쉬웠고, 수집 속도도 빨랐으며 [사이드 간단
 체크](https://searchadvisor.naver.com/tools/sitecheck)와 같은 도구도 제공하고 있어
@@ -157,11 +157,11 @@ export default function Blog({ params }: Props) {
 [구글 리치 검색결과 테스트](https://search.google.com/test/rich-results)에서 발행한 글 중 하나인 [2024 블로그 제작기](https://chogyejin-io.vercel.app/blog/2024-blog)를 테스트해봤을 때, 선택사항인 문제가 몇 개 발견되긴 했지만 [BlogPosting type 관련 구조화된 데이터](https://developers.google.com/search/docs/appearance/structured-data/article?hl=en#article-types)의 date 관련 property 덕분에 검색 결과가 풍부해졌습니다.
 
 <CaptionImage
-  alt={`구글 URL 접두어 예시`}
-  src={`/images/site-appearance/rich-results.png`}
-  width={656 / 2}
-  height={186 / 2}
-  caption={'발행일: Mar 23, 2024'}
+  alt="발행일이 포함된 구글 리치 검색결과 예시"
+  src="/images/site-appearance/rich-results.png"
+  width="328"
+  height="93"
+  caption="발행일: Mar 23, 2024"
 />
 
 ## 마치며
