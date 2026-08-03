@@ -22,7 +22,7 @@ export default function Form() {
         name="entry"
         type="text"
         required
-        className="mt-1 block w-full rounded-md border-neutral-300 bg-gray-100 py-2 pr-32 pl-4 text-neutral-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+        className="mt-1 block w-full rounded-md border border-neutral-300 bg-gray-100 py-2 pr-32 pl-4 text-neutral-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
       />
       <SubmitButton />
     </form>
