@@ -30,7 +30,7 @@ class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       return (
         <NoticeBox variant="danger">
-          <div className="w-full callout">{this.props.fallback}</div>
+          <div className="callout w-full">{this.props.fallback}</div>
         </NoticeBox>
       );
     }

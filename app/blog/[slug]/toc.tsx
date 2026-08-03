@@ -89,7 +89,7 @@ function Toc({ headings }: Props) {
   return (
     <nav
       className={cx(
-        'hidden xl:block transition-all text-sm overflow-auto fixed right-10 w-60 h-full max-h-[calc(100vh-8rem)] break-word',
+        'fixed right-10 hidden h-full max-h-[calc(100vh-8rem)] w-60 overflow-auto text-sm wrap-break-word transition-all xl:block',
         currentIndex >= 0 ? 'top-10' : 'top-60'
       )}
     >
@@ -98,10 +98,10 @@ function Toc({ headings }: Props) {
           <li key={id}>
             <a
               className={cx(
-                'transition-all flex py-1',
+                'flex py-1 transition-all',
                 currentIndex === index
                   ? 'font-bold text-neutral-900 dark:text-neutral-200'
-                  : 'text-neutral-700 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200',
+                  : 'text-neutral-700 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-200',
                 {
                   'ps-5': level === 3,
                 }

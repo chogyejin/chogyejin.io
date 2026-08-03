@@ -140,11 +140,11 @@ export default async function Blog({ params }: { params: Params }) {
           __html: JSON.stringify(jsonLd),
         }}
       />
-      <h1 className="title font-medium text-2xl tracking-tighter max-w-article">
+      <h1 className="title max-w-article text-2xl font-medium tracking-tighter">
         {post.metadata.title}
       </h1>
       <Tags tags={post.metadata.tags ?? []} />
-      <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-article">
+      <div className="mt-2 mb-8 flex max-w-article items-center justify-between text-sm">
         <Suspense fallback={<p className="h-5" />}>
           <p className="text-sm text-neutral-600 dark:text-neutral-400">
             {getFormattedDate(post.metadata.publishedAt)}
@@ -156,7 +156,7 @@ export default async function Blog({ params }: { params: Params }) {
       </div>
       <OutdatedNotice monthsDiff={monthsDiff} />
       <Toc headings={headings} />
-      <article className="prose prose-quoteless prose-neutral dark:prose-invert mb-10">
+      <article className="prose-quoteless prose mb-10 prose-neutral dark:prose-invert">
         <CustomMDX source={post.content} />
       </article>
       <Comments />
