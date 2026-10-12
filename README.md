@@ -17,6 +17,26 @@ bun run build
 bun run start
 ```
 
+## Development workflow
+
+`main` is the trunk. Make small changes on short-lived branches, open a pull
+request, and squash merge after the required `lint-and-build` check passes.
+Merged branches are deleted automatically; there is no separate development
+branch. Review approvals are optional, but CI is required.
+
+GitHub Actions runs the following on PRs targeting `main` and pushes to `main`,
+using Node.js 24.15.0 and Bun 1.3.13:
+
+```bash
+bun install --frozen-lockfile
+bun run lint
+bun run build
+```
+
+The production build includes TypeScript checking. CI does not use production
+database or authentication secrets, so it verifies the build rather than live
+database, login, or guestbook behavior.
+
 ## Skills
 
 - Package Manager: [Bun](https://bun.sh/) 1.3.13
