@@ -13,6 +13,18 @@ export default function Comments() {
       return;
     }
 
+    const getTheme = () =>
+      document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    const syncTheme = () => {
+      const iframe = commentsDiv.querySelector<HTMLIFrameElement>(
+        'iframe.giscus-frame'
+      );
+      iframe?.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme: getTheme() } } },
+        'https://giscus.app'
+      );
+    };
+
     script.async = true;
     script.setAttribute('src', 'https://giscus.app/client.js');
     script.setAttribute('data-repo', 'chogyejin/chogyejin.io');
@@ -24,12 +36,24 @@ export default function Comments() {
     script.setAttribute('data-reactions-enabled', '1');
     script.setAttribute('data-emit-metadata', '0');
     script.setAttribute('data-input-position', 'top');
-    script.setAttribute('data-theme', 'preferred_color_scheme');
+    script.setAttribute('data-theme', getTheme());
     script.setAttribute('data-lang', 'ko');
     script.setAttribute('data-loading', 'lazy');
     script.setAttribute('crossorigin', 'anonymous');
 
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+    commentsDiv.addEventListener('load', syncTheme, true);
     commentsDiv.appendChild(script);
+
+    return () => {
+      observer.disconnect();
+      commentsDiv.removeEventListener('load', syncTheme, true);
+      commentsDiv.replaceChildren();
+    };
   }, []);
 
   return <div id={COMMENT_ID} />;

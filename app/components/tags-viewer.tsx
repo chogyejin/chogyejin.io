@@ -21,7 +21,7 @@ export function TagsViewer({
     <div className={className}>
       <div className="flex items-center gap-3">
         <button
-          className="flex items-center"
+          className="flex cursor-pointer items-center"
           onClick={() => setIsTagsOpen(!isTagsOpen)}
         >
           <span className="text-xl font-normal">태그</span>

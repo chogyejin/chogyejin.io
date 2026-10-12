@@ -150,7 +150,7 @@ function DeleteButton({ isActive }: { isActive: boolean }) {
   return (
     <button
       className={cx(
-        'mb-8 inline-flex items-center rounded-sm border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm/4 text-neutral-900 transition-all dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100',
+        'mb-8 inline-flex cursor-pointer items-center rounded-sm border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm/4 text-neutral-900 transition-all disabled:cursor-not-allowed dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100',
         {
           'bg-red-300/50 dark:bg-red-700/50': isActive,
         }

@@ -8,6 +8,19 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SandpackCSS } from './blog/[slug]/sandpack';
 import { cx } from 'app/utils/cx';
 
+// A plain <script> tag (not next/script) so this runs synchronously while the
+// browser parses <head>, before the page content can paint.
+const themeInitScript = `
+(function () {
+  var stored;
+  try { stored = localStorage.getItem('theme'); } catch (e) {}
+  var isDark = stored === 'dark' ||
+    (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.classList.toggle('dark', isDark);
+  document.documentElement.classList.toggle('light', !isDark);
+})();
+`;
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://chogyejin-io.vercel.app'),
   title: {
@@ -54,6 +67,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
+      suppressHydrationWarning
       className={cx(
         'bg-white text-black dark:bg-[#111010] dark:text-white',
         GeistSans.variable,
@@ -62,6 +76,7 @@ export default function RootLayout({
     >
       <head>
         <SandpackCSS />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="mx-4 mt-8 mb-40 flex max-w-2xl flex-col antialiased md:flex-row lg:mx-auto">
         <main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">

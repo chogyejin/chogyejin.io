@@ -34,7 +34,7 @@ function SubmitButton() {
 
   return (
     <button
-      className="absolute top-1 right-1 flex h-8 w-16 items-center justify-center rounded-sm bg-neutral-200 px-2 py-1 font-medium text-neutral-900 dark:bg-neutral-700 dark:text-neutral-100"
+      className="absolute top-1 right-1 flex h-8 w-16 cursor-pointer items-center justify-center rounded-sm bg-neutral-200 px-2 py-1 font-medium text-neutral-900 disabled:cursor-not-allowed dark:bg-neutral-700 dark:text-neutral-100"
       disabled={pending}
       type="submit"
     >
