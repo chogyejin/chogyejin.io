@@ -14,6 +14,8 @@ const themeInitScript = `
 (function () {
   var stored;
   try { stored = localStorage.getItem('theme'); } catch (e) {}
+  document.documentElement.dataset.themeMode =
+    stored === 'light' || stored === 'dark' ? stored : 'system';
   var isDark = stored === 'dark' ||
     (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
   document.documentElement.classList.toggle('dark', isDark);

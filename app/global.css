@@ -11,6 +11,18 @@
 /* Dark mode is toggled via a `.dark` class on <html> (see ThemeToggle), not OS preference. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Select the icon before hydration using the mode applied by the head script. */
+[data-theme-icon] {
+  display: none;
+}
+
+html:not([data-theme-mode]) [data-theme-icon='system'],
+html[data-theme-mode='system'] [data-theme-icon='system'],
+html[data-theme-mode='light'] [data-theme-icon='light'],
+html[data-theme-mode='dark'] [data-theme-icon='dark'] {
+  display: block;
+}
+
 /* Preserve v3 content globs (in addition to v4 automatic detection) */
 @source '../content/**/*.mdx';
 @source '../public/**/*.svg';

@@ -40,6 +40,7 @@ function getTheme(): Theme {
 }
 
 function updateTheme() {
+  document.documentElement.dataset.themeMode = getMode();
   const isDark = getTheme() === 'dark';
   document.documentElement.classList.toggle('dark', isDark);
   document.documentElement.classList.toggle('light', !isDark);

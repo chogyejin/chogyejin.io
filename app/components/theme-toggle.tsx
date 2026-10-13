@@ -60,15 +60,8 @@ function MoonIcon() {
   );
 }
 
-const ICON: Record<ThemeMode, () => React.JSX.Element> = {
-  system: SystemIcon,
-  light: SunIcon,
-  dark: MoonIcon,
-};
-
 export function ThemeToggle() {
   const mode = useThemeMode();
-  const Icon = ICON[mode];
 
   return (
     <button
@@ -78,7 +71,15 @@ export function ThemeToggle() {
       title={LABEL[mode]}
       className="flex size-8 items-center justify-center rounded-sm transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:hover:bg-neutral-800"
     >
-      <Icon />
+      <span data-theme-icon="system" aria-hidden="true">
+        <SystemIcon />
+      </span>
+      <span data-theme-icon="light" aria-hidden="true">
+        <SunIcon />
+      </span>
+      <span data-theme-icon="dark" aria-hidden="true">
+        <MoonIcon />
+      </span>
     </button>
   );
 }
