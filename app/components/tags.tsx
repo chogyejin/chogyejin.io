@@ -60,7 +60,7 @@ export function Tags({
           )}
         >
           <button
-            className="cursor-pointer px-2"
+            className="px-2"
             onClick={(e) => handleTagClick(e, tag)}
           >
             {tag}

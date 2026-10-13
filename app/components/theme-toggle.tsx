@@ -76,7 +76,7 @@ export function ThemeToggle() {
       onClick={() => setThemeMode(MODES[(MODES.indexOf(mode) + 1) % MODES.length])}
       aria-label={LABEL[mode]}
       title={LABEL[mode]}
-      className="flex size-8 cursor-pointer items-center justify-center rounded-sm transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:hover:bg-neutral-800"
+      className="flex size-8 items-center justify-center rounded-sm transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:hover:bg-neutral-800"
     >
       <Icon />
     </button>
