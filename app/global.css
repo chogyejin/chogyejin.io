@@ -6,6 +6,10 @@
   [role='button']:not(:disabled) {
     cursor: pointer;
   }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
 }
 
 /* Dark mode is toggled via a `.dark` class on <html> (see ThemeToggle), not OS preference. */
