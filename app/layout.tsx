@@ -7,21 +7,9 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SandpackCSS } from './blog/[slug]/sandpack';
 import { cx } from 'app/utils/cx';
+import { initializeTheme } from 'app/utils/theme-init';
 
-// A plain <script> tag (not next/script) so this runs synchronously while the
-// browser parses <head>, before the page content can paint.
-const themeInitScript = `
-(function () {
-  var stored;
-  try { stored = localStorage.getItem('theme'); } catch (e) {}
-  document.documentElement.dataset.themeMode =
-    stored === 'light' || stored === 'dark' ? stored : 'system';
-  var isDark = stored === 'dark' ||
-    (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  document.documentElement.classList.toggle('dark', isDark);
-  document.documentElement.classList.toggle('light', !isDark);
-})();
-`;
+const themeInitScript = `(${initializeTheme.toString()})(${JSON.stringify('theme')})`;
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chogyejin-io.vercel.app'),
