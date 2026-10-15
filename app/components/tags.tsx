@@ -59,7 +59,10 @@ export function Tags({
               : 'bg-gray-400 text-white dark:bg-gray-600'
           )}
         >
-          <button className="px-2" onClick={(e) => handleTagClick(e, tag)}>
+          <button
+            className="px-2"
+            onClick={(e) => handleTagClick(e, tag)}
+          >
             {tag}
           </button>
         </li>

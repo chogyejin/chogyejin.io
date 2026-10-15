@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { ThemeToggle } from './theme-toggle';
 
 const navItems = {
   '/': {
@@ -34,17 +35,20 @@ export function Navbar() {
               );
             })}
           </div>
-          <div className="flex items-center italic">
-            by
-            <a href="https://github.com/chogyejin" target="_blank">
-              <Image
-                alt="chogyejin github avatar"
-                src="https://github.com/chogyejin.png"
-                width="30"
-                height="30"
-                className="mx-2 rounded-full border border-gray-200"
-              />
-            </a>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <div className="flex items-center italic">
+              by
+              <a href="https://github.com/chogyejin" target="_blank">
+                <Image
+                  alt="chogyejin github avatar"
+                  src="https://github.com/chogyejin.png"
+                  width="30"
+                  height="30"
+                  className="mx-2 rounded-full border border-gray-200"
+                />
+              </a>
+            </div>
           </div>
         </nav>
       </div>

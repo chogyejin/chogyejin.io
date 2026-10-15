@@ -1,6 +1,32 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+@layer base {
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Dark mode is toggled via a `.dark` class on <html> (see ThemeToggle), not OS preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Select the icon before hydration using the mode applied by the head script. */
+[data-theme-icon] {
+  display: none;
+}
+
+html:not([data-theme-mode]) [data-theme-icon='system'],
+html[data-theme-mode='system'] [data-theme-icon='system'],
+html[data-theme-mode='light'] [data-theme-icon='light'],
+html[data-theme-mode='dark'] [data-theme-icon='dark'] {
+  display: block;
+}
+
 /* Preserve v3 content globs (in addition to v4 automatic detection) */
 @source '../content/**/*.mdx';
 @source '../public/**/*.svg';
@@ -41,19 +67,19 @@
   --sh-entity: #e25a1c;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --sh-class: #4c97f8;
-    --sh-identifier: white;
-    --sh-keyword: #f47067;
-    --sh-string: #0fa295;
-  }
-  html {
-    color-scheme: dark;
-  }
+.dark {
+  --sh-class: #4c97f8;
+  --sh-identifier: white;
+  --sh-keyword: #f47067;
+  --sh-string: #0fa295;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 html {
+  color-scheme: light;
   min-width: 360px;
 }
 

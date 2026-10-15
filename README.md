@@ -56,10 +56,10 @@ database, login, or guestbook behavior.
 - MDX components(`CaptionImage`)
 - Front matter(tags for slug)
 - Structured data(JSON-LD)
+- Theme switch (system, light, dark) with saved preferences
 
 ## To Be Added..
 
-- Theme switch
 - Front matter(updatedAt, series, ...)
 - Korean spell check in PR using [GitHub Actions](https://github.com/features/actions)
 - [Feature-Sliced Design](https://feature-sliced.design/) structure

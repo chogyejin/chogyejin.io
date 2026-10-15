@@ -7,6 +7,9 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SandpackCSS } from './blog/[slug]/sandpack';
 import { cx } from 'app/utils/cx';
+import { initializeTheme } from 'app/utils/theme-init';
+
+const themeInitScript = `(${initializeTheme.toString()})(${JSON.stringify('theme')})`;
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chogyejin-io.vercel.app'),
@@ -54,6 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
+      suppressHydrationWarning
       className={cx(
         'bg-white text-black dark:bg-[#111010] dark:text-white',
         GeistSans.variable,
@@ -62,6 +66,7 @@ export default function RootLayout({
     >
       <head>
         <SandpackCSS />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body className="mx-4 mt-8 mb-40 flex max-w-2xl flex-col antialiased md:flex-row lg:mx-auto">
         <main className="mt-6 flex min-w-0 flex-auto flex-col px-2 md:px-0">

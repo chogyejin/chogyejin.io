@@ -12,6 +12,7 @@ import {
 } from './sandpack-files';
 import { NoticeBox } from './notice-box';
 import React, { Suspense } from 'react';
+import { useTheme } from 'app/utils/theme';
 
 class ErrorBoundary extends React.Component<
   { fallback: React.ReactNode; children?: React.ReactNode },
@@ -40,6 +41,7 @@ class ErrorBoundary extends React.Component<
 }
 
 export function LiveCode({ example }: { example: string }) {
+  const theme = useTheme();
   let files;
 
   if (example === 'html') {
@@ -61,7 +63,7 @@ export function LiveCode({ example }: { example: string }) {
           fallback={'Oops, there was an error loading the CodeSandbox'}
         >
           <Sandpack
-            theme="auto"
+            theme={theme}
             files={{
               'App.tsx': {
                 code: stylexApp,
@@ -94,7 +96,7 @@ export function LiveCode({ example }: { example: string }) {
       <ErrorBoundary
         fallback={'Oops, there was an error loading the CodeSandbox.'}
       >
-        <Sandpack theme="auto" template="static" files={files} />
+        <Sandpack theme={theme} template="static" files={files} />
       </ErrorBoundary>
     </Suspense>
   );
